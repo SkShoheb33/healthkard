@@ -1,0 +1,18 @@
+.tr{
+    background-color: #E5F7EF;
+}
+.noscroll::-webkit-scrollbar{
+    display: none;
+}
+
+.green{
+    background: #00BFA8 !important;
+  }
+  .blue{
+    background: #303486;
+  }
+
+
+.active{
+  background-color: rgba(255, 255, 255, 0.5);
+}
