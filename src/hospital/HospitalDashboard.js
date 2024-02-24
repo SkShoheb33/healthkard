@@ -9,7 +9,7 @@ function HospitalDashboard() {
    
     
   return (
-    <div className='bg-white flex flex-col-reverse md:flex-row h-[100vh] w-[100vw] overflow-hidden'>
+    <div className='bg-white flex flex-col-reverse lg:flex-row h-[100vh] w-[100vw] overflow-hidden'>
         <SideBar/>
         <div className='flex flex-col w-full p-5 gap-5 h-full'>
             <Navbar/>

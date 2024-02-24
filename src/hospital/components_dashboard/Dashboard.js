@@ -34,7 +34,7 @@ function Dashboard() {
   }
   return (
     <>
-        <div className='md:w-1/4 '>   
+        <div className='lg:w-1/4 '>   
             <label htmlFor="default-search" className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
                 <div className="relative">
                     <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
@@ -47,7 +47,7 @@ function Dashboard() {
         </div>
         <div className='flex w-full  h-full justify-between gap-2'>
             <Table data = {records} columns = {columns}/>
-            <div className='hidden md:flex flex-col w-2/5 gap-5  '>
+            <div className='hidden lg:flex flex-col w-2/5 gap-5  '>
                 <UserInfo/>
                 <Graph/>
             </div>
