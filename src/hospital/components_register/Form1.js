@@ -1,4 +1,5 @@
 import React from 'react'
+import Map from './Map'
 
 function Form1() {
   return (
@@ -45,7 +46,7 @@ function Form1() {
             </div>
           </div>  
           <div className='h-[300px] w-full bg-gray-200 justify-center items-center flex'>
-              maps here
+              <Map/>
           </div>
         </div>
         <div className='w-full flex flex-col gap-4  p-2 py-4 rounded shadow-md'>
