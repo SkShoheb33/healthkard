@@ -5,7 +5,7 @@ function Form3() {
     <>
     
     <div className='text-4xl mt-7 font-medium'>Media Details</div>
-    <div className='flex flex-col gap-4 mt-7 md:w-3/4 shadow-md p-8'>
+    <div className='flex flex-col gap-4 mt-7 w-full shadow-md p-8'>
       
       <div className='text-gray-400 text-center text-xl'>Hospital Logo will be displayed during searching and locating  </div>
       <div className='blue text-white h-10 flex  justify-center items-center rounded-md'>Upload Hospital Logo</div>  
