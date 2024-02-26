@@ -7,7 +7,7 @@ function HospitalRegister() {
   return (
     <div className='flex flex-col'>
         <Navbar/>
-        <div className='flex h-[90vh] flex-col md:flex-row p-6'>
+        <div className='flex h-[90vh] flex-col  md:flex-row  pr-10 p-6'>
             <div className='hidden md:flex w-full md:w-1/3 '>
                 <ProgressBox/>
             </div>

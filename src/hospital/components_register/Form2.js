@@ -16,14 +16,14 @@ function Form2() {
   };
 
   return (
-    <div className='h-full overflow-scroll noscroll'>
+    <div className='h-full overflow-scroll noscroll md:w-4/5'>
       {/* Render each doctor details form */}
-      <div className='text-3xl font-bold'>Doctor Details</div>
+      <div className='text-4xl mt-7 font-medium'>Doctor Details</div>
       {doctorList.map((form, index) => (
         <DoctorDeatailsForm key={index} />
       ))}
       {/* Button to add another doctor form */}
-      <div onClick={addAnotherDoctor} className='flex items-center gap-2 text-2xl my-4 hover:cursor-pointer'>
+      <div onClick={addAnotherDoctor} className='flex items-center gap-2  text-2xl my-4 hover:cursor-pointer'>
         <IoIosAddCircleOutline />
         Add Another Doctor
       </div>
