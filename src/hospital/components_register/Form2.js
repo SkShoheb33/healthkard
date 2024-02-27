@@ -16,7 +16,7 @@ function Form2() {
   };
 
   return (
-    <div className='h-full overflow-scroll noscroll w-full'>
+    <div className='h-full overflow-scroll noscroll md:w-4/5'>
       {/* Render each doctor details form */}
       <div className='text-4xl mt-7 font-medium'>Doctor Details</div>
       {doctorList.map((form, index) => (
