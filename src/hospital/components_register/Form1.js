@@ -1,30 +1,10 @@
 import React,{useEffect,useState} from 'react'
 
 function Form1() {
-  // const [hospitalDetails,setHospitalDetails] = useState(localStorage.getItem('hospitalDetails') || {});
-  // const data = localStorage.getItem('hospitalDetails');
   const [hospitalDetails, setHospitalDetails] = useState(() => {
-    // Retrieve hospitalDetails from localStorage
-    const storedHospitalDetails = localStorage.getItem('hospitalDetails');
-    // Parse the JSON string or use an empty object if it doesn't exist
+    const storedHospitalDetails = localStorage.getItem('hospitalDetails');  
     return storedHospitalDetails ? JSON.parse(storedHospitalDetails) : {};
   });
-
-  // const [hospitalDetails, setHospitalDetails] = useState({
-  //   hospitalLegalName: data.hospitalLegalName,
-  //   hospitalTradeName: localStorage.getItem('hospitalTradeName') || '',
-  //   gstNumber: localStorage.getItem('gstNumber') || '',
-  //   licenseNumber: localStorage.getItem('licenseNumber') || '',
-  //   pinOrCity: localStorage.getItem('pinOrCity') || '',
-  //   contactNumber: localStorage.getItem('contactNumber') || '',
-  //   availableOn: JSON.parse(localStorage.getItem('availableOn')) || [1, 1, 1, 1, 1, 1, 1],
-  //   from: localStorage.getItem('from') || '',
-  //   to: localStorage.getItem('to') || '',
-  //   servicesOffered: localStorage.getItem('servicesOffered') || '',
-  //   hospitalOwnerContactNumber: localStorage.getItem('hospitalOwnerContactNumber') || '',
-  //   hospitalOwnerFullName: localStorage.getItem('hospitalOwnerFullName') || '',
-  //   hospitalOwnerEmail: localStorage.getItem('hospitalOwnerEmail') || ''
-  // });
   
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -35,7 +15,6 @@ function Form1() {
   };
   useEffect(() => {
     localStorage.setItem('hospitalDetails', JSON.stringify(hospitalDetails));
-    console.log(localStorage.JSON)
   }, [hospitalDetails]);
 
   return (

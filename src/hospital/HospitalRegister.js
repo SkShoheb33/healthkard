@@ -3,7 +3,8 @@ import Navbar from './components_register/Navbar';
 import ProgressBox from './components_register/ProgressBox';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import SuccessPopup from './components_register/SuccessPopup';
-
+import { ToastContainer, toast,Bounce } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 function HospitalRegister() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -60,14 +61,18 @@ function HospitalRegister() {
   };
   const [saved,setSaved] = useState(false);
   const save = ()=>{
+    notify();
+    // localStorage.removeItem('hospitalDetails');
+    // localStorage.removeItem('doctorList');
+    // return;
     setSaved(true);
   }
-
+  const notify = () => toast.error("Please fill all the fields",{transition: Bounce});
 
   return (
     <>
-   
-      {!saved&&<div className='relative flex flex-col'>
+    {!saved&&<div className='relative flex flex-col'>
+        <ToastContainer pauseOnFocusLoss pauseOnHover draggable  />
         <Navbar />
         <div className='flex h-[90vh] flex-col  md:flex-row  pr-10 p-6'>
           <div className='hidden md:flex w-full md:w-1/3 '>
