@@ -2,9 +2,10 @@ import React, { useState } from 'react'
 import { FcGoogle } from "react-icons/fc";
 import { RxCross2 } from "react-icons/rx";
 import { Link } from 'react-router-dom';
-
+import OTPInput from "otp-input-react";
 
 function Login() {
+    const [OTP, setOTP] = useState("");
     const [isOtpSent,setIsOtpSent] = useState(false);
     const [email,setEmail] = useState("");
     const [emailError,setEmailError] = useState(false);
@@ -30,15 +31,11 @@ function Login() {
                 <label className="flex w-full h-full select-none pointer-events-none absolute left-0 font-normal !overflow-visible truncate peer-placeholder-shown:text-green-gray-500 leading-tight peer-focus:leading-tight peer-disabled:text-transparent peer-disabled:peer-placeholder-shown:text-green-gray-500 transition-all -top-1.5 peer-placeholder-shown:text-sm text-[11px] peer-focus:text-[11px] before:content[' '] before:block before:box-border before:w-2.5 before:h-1.5 before:mt-[6.5px] before:mr-1 peer-placeholder-shown:before:border-transparent before:rounded-tl-md before:border-t peer-focus:before:border-t-2 before:border-l peer-focus:before:border-l-2 before:pointer-events-none before:transition-all peer-disabled:before:border-transparent after:content[' '] after:block after:flex-grow after:box-border after:w-2.5 after:h-1.5 after:mt-[6.5px] after:ml-1 peer-placeholder-shown:after:border-transparent after:rounded-tr-md after:border-t peer-focus:after:border-t-2 after:border-r peer-focus:after:border-r-2 after:pointer-events-none after:transition-all peer-disabled:after:border-transparent peer-placeholder-shown:leading-[3.75] text-gray-500 peer-focus:text-gray-900 before:border-green-gray-200 peer-focus:before:!border-gray-900 after:border-green-gray-200 peer-focus:after:!border-gray-900">Enter Email here</label>
                 {emailError&&<div className=' text-xs text-red-500 mb-2'>*Please enter email address</div>}
             </div>}
-            {isOtpSent && <div className='flex flex-col'>
+            {isOtpSent && <div className='flex flex-col gap-4'>
                 <div className=''>Enter OTP</div>
-                <div className='flex justify-between p-6'>
-                    <input type='text' maxLength={1} className='focus:border-0 border-green-800 border rounded-md w-8 h-8 text-center'/>
-                    <input type='text' maxLength={1} className='focus:border-0 border-green-800 border rounded-md w-8 h-8 text-center'/>
-                    <input type='text' maxLength={1} className='focus:border-0 border-green-800 border rounded-md w-8 h-8 text-center'/>
-                    <input type='text' maxLength={1} className='focus:border-0 border-green-800 border rounded-md w-8 h-8 text-center'/>
-                </div>
-                <div className='text-sm px-2'>Enter OTP received to sh*****@gmail.com</div>
+                <OTPInput value={OTP} onChange={setOTP} autoFocus OTPLength={4} otpType="number" disabled={false}   inputClassName='border-2 border-black rounded-md ' className='w-full flex justify-between '/>
+                <div className='text-sm '>Enter OTP received to <span className='font-semibold'>{email}</span></div>
+                <div className='text-sm'>Haven't received <span className='text-blue font-semibold hover:cursor-pointer'>Resend ?</span></div>
             </div>}
             <div onClick={sendOTP}  className='hover:cursor-pointer green text-white text-center rounded-md p-2'>{!isOtpSent?<div>Send OTP</div>:<div>Sign Up</div>}</div>
             <div className='flex w-full items-center justify-center gap-2'>
