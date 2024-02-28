@@ -22,11 +22,14 @@ code {
   background: #00BFA8;
 }
 .blue{
-  background: #303486;
+  background: #303486 !important;
 }
 .text-green{
   color: #00BFA8;
 }
 .text-blue{
   color: #303486;
+}
+.b-blue{
+  border:1px solid #303486;
 }
