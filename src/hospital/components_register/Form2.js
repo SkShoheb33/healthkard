@@ -16,11 +16,11 @@ function Form2() {
   
   return (
     <div className='h-full overflow-scroll noscroll md:w-4/5'>
-      <div className='text-4xl mt-7 font-medium'>Doctor Details</div>
+      <div className='text-2xl lg:text-4xl mt-7 font-medium'>Doctor Details</div>
       {doctorList.map((doctor, index) => (
         <DoctorDetailsForm key={index} index={index} doctor={doctor} />
       ))}
-      <div onClick={addAnotherDoctor} className='flex items-center gap-2  text-2xl my-4 hover:cursor-pointer'>
+      <div onClick={addAnotherDoctor} className='flex items-center gap-2  text-xl lg:text-2xl my-4 hover:cursor-pointer'>
         <IoIosAddCircleOutline />
         Add Another Doctor
       </div>

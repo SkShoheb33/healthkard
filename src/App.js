@@ -11,6 +11,7 @@ import SignUp from './hospital/components/SignUp';
 import Login from './hospital/components/Login';
 import Dashboard from './hospital/components_dashboard/Dashboard';
 import Profile from './hospital/components_dashboard/Profile';
+import SuccessPopup from './hospital/components_register/SuccessPopup';
 function App() {
   return (
     <BrowserRouter>
@@ -29,6 +30,7 @@ function App() {
           <Route index path='hospitalDetails' element={<Form1/>}></Route>
           <Route path='doctorDetails' element={<Form2/>}></Route>
           <Route path='mediaDetails' element={<Form3/>}></Route>
+          <Route path='success' element={<SuccessPopup/>}></Route>
         </Route>
       </Routes>
     </BrowserRouter>

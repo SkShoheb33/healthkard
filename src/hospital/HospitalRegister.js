@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Navbar from './components_register/Navbar';
 import ProgressBox from './components_register/ProgressBox';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
-import SuccessPopup from './components_register/SuccessPopup';
+// import SuccessPopup from './components_register/SuccessPopup';
 import { ToastContainer, toast,Bounce } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 function HospitalRegister() {
@@ -12,21 +12,15 @@ function HospitalRegister() {
   const [nextBtn, setNextBtn] = useState(true);
 
   useEffect(() => {
-    switch (location.pathname) {
-      case '/hospitalRegister/hospitalDetails':
-        setPrevBtn(false);
-        setNextBtn(true);
-        break;
-      case '/hospitalRegister/doctorDetails':
-        setPrevBtn(true);
-        setNextBtn(true);
-        break;
-      case '/hospitalRegister/mediaDetails':
-        setPrevBtn(true);
-        setNextBtn(false);
-        break;
-      default:
-        break;
+    if(location.pathname === '/hospitalRegister/hospitalDetails' || location.pathname === '/hospitalRegister/hospitalDetails/'){
+      setPrevBtn(false);
+      setNextBtn(true);
+    }else if(location.pathname === '/hospitalRegister/doctorDetails' || location.pathname === '/hospitalRegister/doctorDetails/'){
+      setPrevBtn(true);
+      setNextBtn(true);
+    }else{
+      setPrevBtn(true);
+      setNextBtn(false);
     }
   }, [location.pathname]);
 
@@ -65,7 +59,8 @@ function HospitalRegister() {
     // localStorage.removeItem('hospitalDetails');
     // localStorage.removeItem('doctorList');
     // return;
-    setSaved(true);
+    navigate('success');
+    setSaved(false);
   }
   const notify = () => toast.error("Please fill all the fields",{transition: Bounce});
 
@@ -78,7 +73,7 @@ function HospitalRegister() {
           <div className='hidden md:flex w-full md:w-1/3 '>
             <ProgressBox />
           </div>
-          <div className='w-full md:w-2/3 pb-8'>
+          <div className='w-full md:w-2/3 pb-8 h-[75vh] overflow-scroll'>
             <Outlet/>
           </div>
           <div className='bg-white fixed font-bold  bottom-0 left-0 h-16 flex justify-between items-center  w-full '>
@@ -107,7 +102,7 @@ function HospitalRegister() {
         </div>
         
       </div>}
-      {saved && <SuccessPopup/>}
+      {saved && <Outlet/>}
     </>
   )
 }
