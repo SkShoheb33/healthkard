@@ -33,3 +33,26 @@ code {
 .b-blue{
   border:1px solid #303486;
 }
+
+/* HTML: <div class="loader"></div> */
+.loader {
+  width: 120px;
+  height: 20px;
+  -webkit-mask: linear-gradient(90deg,#303486 70%,#30348600 0) left/20% 100%;
+  background:
+   linear-gradient(#303486 0 0) left -25% top 0 /20% 100% no-repeat
+   #ddd;
+  animation: l7 1s infinite steps(6);
+}
+@keyframes l7 {
+    100% {background-position: right -25% top 0}
+}
+
+
+::-webkit-file-upload-button{
+  display: none;
+}
+
+::file-selector-button {
+  display: none;
+}

@@ -1,9 +1,16 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { FaRegCircleDot } from "react-icons/fa6";
-import { Link, Outlet } from 'react-router-dom'
+import { Link, Outlet, useNavigate } from 'react-router-dom'
 import mobile from '../assets/mobile.png'
 import './style.css'
 function HospitalCredentails() {
+  const navigate =  useNavigate();
+  useEffect(()=>{
+    let storedEmail = JSON.stringify(localStorage.getItem('email'));
+    if(storedEmail){
+      navigate('/hospitalRegister/hospitalDetails/');
+    }
+  },[]);
   return (
     <div className='flex flex-col relative'>
       <div className='fixed top-0 left-0 w-full'>

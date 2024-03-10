@@ -17,11 +17,6 @@ function SideBar() {
               <FaHome/>
               <div className='text-xs lg:text-sm font-thin'>Home</div>
           </NavLink>
-          <NavLink to='dashboard' className='p-2  rounded-md flex flex-col items-center w-1/2 md:w-full md:gap-1 hover:cursor-pointer'>
-              <FaHome/>
-              <div className='text-xs md:text-sm font-thin '>Home</div>
-
-          </NavLink>
         </div>
         <div className='flex flex-col items-center justify-center lg:gap-1 hover:cursor-pointer  lg:h-1/3'>
             <CiLogout/>

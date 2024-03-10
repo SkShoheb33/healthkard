@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Navbar from './components_register/Navbar';
 import ProgressBox from './components_register/ProgressBox';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
-// import SuccessPopup from './components_register/SuccessPopup';
+import axios from 'axios';
 import { ToastContainer, toast,Bounce } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 function HospitalRegister() {
@@ -10,7 +10,12 @@ function HospitalRegister() {
   const navigate = useNavigate();
   const [prevBtn, setPrevBtn] = useState(false);
   const [nextBtn, setNextBtn] = useState(true);
-
+  useEffect(()=>{
+    let storedEmail = JSON.stringify(localStorage.getItem('email'));
+    if(!storedEmail){
+      navigate('/auth/signup');
+    }
+  },[]);
   useEffect(() => {
     if(location.pathname === '/hospitalRegister/hospitalDetails' || location.pathname === '/hospitalRegister/hospitalDetails/'){
       setPrevBtn(false);
@@ -55,22 +60,55 @@ function HospitalRegister() {
   };
   const [saved,setSaved] = useState(false);
   const save = ()=>{
-    notify();
-    // localStorage.removeItem('hospitalDetails');
-    // localStorage.removeItem('doctorList');
-    // return;
-    navigate('success');
-    setSaved(false);
+    const storedHospitalDetails = JSON.parse(localStorage.getItem('hospitalDetails'));
+    const storedDoctorList = JSON.parse(localStorage.getItem('doctorList'));
+    const storedMediaDetails = JSON.parse(localStorage.getItem('mediaDetails'));
+    if(storedHospitalDetails.hospitalNumber &&
+      storedHospitalDetails.from && storedHospitalDetails.gstNumber && storedHospitalDetails.hospitalGSTFile &&
+      storedHospitalDetails.hospitalLegalName && storedHospitalDetails.hospitalLicense && 
+      storedHospitalDetails.hospitalOwnerContactNumber && storedHospitalDetails.hospitalOwnerEmail &&
+      storedHospitalDetails.hospitalOwnerFullName && storedHospitalDetails.hospitalTradeName &&
+      storedHospitalDetails.licenseNumber && storedHospitalDetails.address.city && storedHospitalDetails.address.code &&
+       storedHospitalDetails.address.country && storedHospitalDetails.address.landmark
+       && storedHospitalDetails.address.state && storedHospitalDetails.address.street && 
+      storedHospitalDetails.servicesOffered && storedHospitalDetails.to){
+        for(let i = 0;i<storedDoctorList.length;i++){
+          if(!(storedDoctorList[i].doctorLicenseURL && storedDoctorList[i].email &&
+             storedDoctorList[i].lisenceNumber && storedDoctorList[i].name && storedDoctorList[i].number &&
+             storedDoctorList[i].qualification)){
+              notify();
+              return;
+          }
+        }
+        if(storedMediaDetails.desc && storedMediaDetails.doctorImageURL && storedMediaDetails.hospitalImageURL
+          && storedMediaDetails.logoURL && storedMediaDetails.videoURL){
+              axios.post('http://localhost:3002/saveHospitalData',{
+                hospitalId:'HKHO2012',
+                hospitalDetails:storedHospitalDetails,
+                doctorList:storedDoctorList,
+                mediaDetails:storedMediaDetails
+              }).then((result) => {
+                console.log(result);
+                navigate('success');
+                localStorage.clear();
+              }).catch((err) => {
+                notify();
+              });
+              setSaved(true);
+              return;
+          }
+      }
+      notify();
   }
   const notify = () => toast.error("Please fill all the fields",{transition: Bounce});
 
   return (
-    <>
-    {!saved&&<div className='relative flex flex-col'>
+    <div>
+    {!saved &&<div className='relative flex flex-col'>
         <ToastContainer pauseOnFocusLoss pauseOnHover draggable  />
         <Navbar />
-        <div className='flex h-[90vh] flex-col  md:flex-row  pr-10 p-6'>
-          <div className='hidden md:flex w-full md:w-1/3 '>
+        <div className='flex h-[90vh] flex-col gap-4   md:flex-row  pr-10 p-6'>
+          <div className='hidden md:flex w-full lg:w-1/3 justify-end  '>
             <ProgressBox />
           </div>
           <div className='w-full md:w-2/3 pb-8 h-[75vh] overflow-scroll'>
@@ -103,7 +141,8 @@ function HospitalRegister() {
         
       </div>}
       {saved && <Outlet/>}
-    </>
+      
+    </div>
   )
 }
 
