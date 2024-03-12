@@ -1,15 +1,13 @@
 import React,{useEffect,useState} from 'react';
-import {ref, uploadBytesResumable, getDownloadURL}  from 'firebase/storage'
+import {ref, uploadBytesResumable, getDownloadURL, deleteObject}  from 'firebase/storage'
 import {auth, storage} from '../../firebase-config';
+import { RxCross2 } from "react-icons/rx";
 import OTPInput from "otp-input-react";
 import PhoneInput from 'react-phone-input-2'
 import ClipLoader from "react-spinners/ClipLoader";
 import 'react-phone-input-2/lib/style.css'
 import { RecaptchaVerifier, signInWithPhoneNumber } from 'firebase/auth';
-import Map from './Map';
-// import Map from './Map';
 function Form1() {
-  
   const [hospitalDetails, setHospitalDetails] = useState(() => {
     const storedHospitalDetails = localStorage.getItem('hospitalDetails');
     return storedHospitalDetails ? JSON.parse(storedHospitalDetails) : {
@@ -22,7 +20,7 @@ function Form1() {
         Sa: true,
         Su: true
     },
-      from: '',
+      from: '08:00',
       gstNumber: '',
       hospitalGSTFile: '',
       hospitalLegalName: '',
@@ -42,16 +40,18 @@ function Form1() {
         code:''
       },
       servicesOffered: '',
-      to: ''
+      to: '20:00'
       };
   });
-
   const [daysAvailabilty, setDaysAvailabilty] = useState(() => {
     const storedHospitalDetails = localStorage.getItem('hospitalDetails');
     return JSON.parse(storedHospitalDetails) && JSON.parse(storedHospitalDetails)['daysAvailabilty'] ? JSON.parse(storedHospitalDetails)['daysAvailabilty'] : 
       { M: true, T: true, W: true, Th: true, F: true, Sa: false, Su: false };
   });
-
+  const [fileNames, setFileNames] = useState(() => {
+    let storedFilesNames = localStorage.getItem('fileNames');
+    return storedFilesNames ? JSON.parse(storedFilesNames) : [null, null];
+  });
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setHospitalDetails((prevState) => ({
@@ -63,7 +63,7 @@ function Form1() {
 
  
   // use effect sections
-
+  
   useEffect(() => {
     const storedHospitalDetails = JSON.parse(localStorage.getItem('hospitalDetails'));
     if (storedHospitalDetails && storedHospitalDetails.daysAvailabilty) {
@@ -83,51 +83,28 @@ function Form1() {
     localStorage.setItem('hospitalDetails', JSON.stringify(hospitalDetails));
   }, [hospitalDetails]);
   useEffect(()=>{
+    document.getElementById('recaptcha1').style.display='none';
+    document.getElementById('recaptcha2').style.display='none';
     const storedHospitalDetails = JSON.parse(localStorage.getItem('hospitalDetails'));
-    if(storedHospitalDetails.hospitalGSTFile){
-      const btn = document.getElementById('hospitalGSTFileBtn');
-      btn.classList.remove('blue');
-      btn.classList.remove('h-10');
-      btn.classList.add('h-2');
-      btn.innerHTML = ""
-    }
-    if(storedHospitalDetails.hospitalLicense){
-      const btn = document.getElementById('hospitalLicenseBtn');
-      btn.classList.remove('blue');
-      btn.classList.remove('h-10');
-      btn.classList.add('h-2');
-      btn.innerHTML = ""
-    }
+    
     if(storedHospitalDetails.hospitalNumber){
       setOtp1({otp:'',flag:false,verified:true})
     }
     if(storedHospitalDetails.hospitalOwnerContactNumber){
       setOtp2({otp:'',flag:false,verified:true})
     }
-  },[])
-
+  },[]);
   const [progress,setProgress] = useState(0);
-  const uploadPdf = (selectedPdf,field) => {
+  // upload and delete
+  const uploadPdf = (selectedPdf,field,index) => {
       if (selectedPdf) {
           // console.log(field+'/'+selectedPdf.name);
           const imageRef = ref(storage,'HealthKard/'+ field+'/'+selectedPdf.name);
           const uploadTask = uploadBytesResumable(imageRef, selectedPdf);
-
-          // Listen for state changes, errors, and completion of the upload.
-          const btn = document.getElementById(`${field}Btn`);
-          btn.classList.remove('blue');
-          btn.classList.remove('h-10');
-          btn.classList.add('h-2');
-          btn.innerHTML = ""
-          // const progressBar = document.createElement(`${field}Progress`);
-          
           uploadTask.on('state_changed',
           (snapshot) => {
               // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
                   setProgress((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
-                  btn.style.background = '#00BFA8';
-                  // progressBar.style.width = `${prgress}%`
-                  
                   console.log('Upload is ' + progress + '% done');
                   return;
               },
@@ -138,7 +115,12 @@ function Form1() {
               () => {
                   // Handle successful uploads on complete
                   getDownloadURL(uploadTask.snapshot.ref).then((imageUrl) => {
-                      // console.log('Image uploaded successfully:', imageUrl);
+                    setFileNames(prevFileNames => {
+                        const temp = [...prevFileNames];
+                        temp[index] = selectedPdf.name;
+                        localStorage.setItem('fileNames', JSON.stringify(temp));
+                        return temp;
+                      });
                       setHospitalDetails((prevState) => ({
                         ...prevState,
                         [field]: imageUrl,
@@ -151,8 +133,26 @@ function Form1() {
       }
       setProgress(0);
   };
- // opt's section here
+  const deleteFile = (filePath,index) => {
+    const fileRef = ref(storage, filePath);
+    // Delete the file
+    deleteObject(fileRef)
+        .then(() => {
+            console.log('File deleted successfully');
+            // Update fileNames state after deletion
+            setFileNames(prevFileNames => {
+                const temp = [...prevFileNames];
+                temp[index] = null; 
+                localStorage.setItem('fileNames', JSON.stringify(temp)); 
+                return temp;
+            });
+        })
+        .catch((error) => {
+            console.error('Error deleting file:', error);
+        });
+};
 
+ // opt's section here
  const [ownerPhone,setOwnerPhone] = useState(null);
  const [hospitalPhone,setHospitalPhone] = useState(null);
  const [otp1,setOtp1] = useState({otp:'',flag:false,verified:false});
@@ -222,7 +222,7 @@ function Form1() {
 
 
   return (
-    <div className=' lg:w-4/5 mx-auto relative'>
+    <div className=' lg:w-4/5 mx-auto'>
       <div className='text-2xl lg:text-4xl mt-7 font-medium'>Hospital Details</div>
       <div className='w-full p-2 flex flex-col mt-10 gap-8'>
         <div className="w-full">
@@ -246,11 +246,14 @@ function Form1() {
               </label>
           </div>
         </div>
-        <label htmlFor="hospitalGSTFile" id='hospitalGSTFileBtn' className="hover:cursor-pointer blue text-white h-10 flex justify-center items-center rounded-md">
+        {!fileNames[0] && <label htmlFor="hospitalGSTFile" id='hospitalGSTFileBtn' className="hover:cursor-pointer blue text-white h-10 flex justify-center items-center rounded-md">
           <span>Upload GST File</span>
-          <input type="file" id="hospitalGSTFile" className="hidden" onChange={(e)=>uploadPdf(e.target.files[0],'hospitalGSTFile')} accept=".pdf"/>
-        </label>
-
+          <input type="file" id="hospitalGSTFile" className="hidden" onChange={(e)=>uploadPdf(e.target.files[0],'hospitalGSTFile',0)} accept=".pdf"/>
+        </label>}
+        {fileNames[0] && <div className='flex gap-2 items-center bg-gray-200 w-fit p-1 rounded-md '>
+            <div>{fileNames[0]}</div>
+            <RxCross2 onClick={()=>deleteFile(hospitalDetails.hospitalGSTFile,0)} className='hover:text-red-500 hover:cursor-pointer'/>
+        </div>}
         <div className="w-full">
           <div className="relative w-full min-w-[200px] h-10">
             <input name="licenseNumber" value={hospitalDetails.licenseNumber} onChange={handleInputChange} className="border- peer w-full h-full bg-transparent text-blue-gray-700 font-sans font-normal outline outline-0 focus:outline-0 disabled:bg-blue-gray-50 disabled:border-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200  focus:border-2 border-t-transparent focus:border-t-transparent text-sm p-5 rounded-[5px]  focus:border-gray-900" placeholder=" " />
@@ -258,11 +261,14 @@ function Form1() {
               </label>
           </div>
         </div>
-        <label htmlFor="hospitalLicense" id='hospitalLicenseBtn' className="hover:cursor-pointer blue text-white h-10 flex justify-center items-center rounded-md">
+        {!fileNames[1] && <label htmlFor="hospitalLicense" id='hospitalLicenseBtn' className="hover:cursor-pointer blue text-white h-10 flex justify-center items-center rounded-md">
           <span>Upload License File</span>
-          <input type="file" id="hospitalLicense" className="hidden" onChange={(e)=>uploadPdf(e.target.files[0],'hospitalLicense')} accept=".pdf"/>
-        </label>
-        
+          <input type="file" id="hospitalLicense" className="hidden" onChange={(e)=>uploadPdf(e.target.files[0],'hospitalLicense',1)} accept=".pdf"/>
+        </label>}
+        {fileNames[1] && <div className='flex gap-2 items-center bg-gray-200 w-fit p-1 rounded-md '>
+            <div>{fileNames[1]}</div>
+            <RxCross2 onClick={()=>deleteFile(hospitalDetails.hospitalGSTFile,1)} className='hover:text-red-500 hover:cursor-pointer'/>
+        </div>}
         <div className='flex flex-col gap-5 shadow-md p-2 lg:p-4 rounded-md'>
           <div className='text-xl lg:text-2xl font-semibold'>Please place the pin accurately at your outlet’s location on the map</div>
           <div className="w-full flex flex-wrap gap-4 justify-between">
@@ -292,7 +298,7 @@ function Form1() {
               </label>
             </div>
             <div className="relative w-5/12 min-w-[200px] h-10 ">
-              <input name="code" value={hospitalDetails.address.code} onChange={(e)=>setHospitalDetails({...hospitalDetails,address:{...hospitalDetails.address,code:e.target.value}})} className="border peer w-full h-full bg-transparent text-blue-gray-700 font-sans font-normal outline outline-0 focus:outline-0 disabled:bg-blue-gray-50 disabled:border-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200  focus:border-2 border-t-transparent focus:border-t-transparent text-sm px-3 py-2.5 rounded-[7px]  focus:border-gray-900" placeholder=" " />
+              <input name="code" value={hospitalDetails.address.code} onChange={(e)=>setHospitalDetails({...hospitalDetails,address:{...hospitalDetails.address,code  :e.target.value}})} className="border peer w-full h-full bg-transparent text-blue-gray-700 font-sans font-normal outline outline-0 focus:outline-0 disabled:bg-blue-gray-50 disabled:border-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200  focus:border-2 border-t-transparent focus:border-t-transparent text-sm px-3 py-2.5 rounded-[7px]  focus:border-gray-900" placeholder=" " />
               <label className="flex w-full h-full select-none pointer-events-none absolute left-0 font-normal !overflow-visible truncate peer-placeholder-shown:text-blue-gray-500 leading-tight peer-focus:leading-tight peer-disabled:text-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500 transition-all -top-1.5 peer-placeholder-shown:text-sm text-[11px] peer-focus:text-[11px] before:content[' '] before:block before:box-border before:w-2.5 before:h-1.5 before:mt-[6.5px] before:mr-1 peer-placeholder-shown:before:border-transparent before:rounded-tl-md before:border-t peer-focus:before:border-t-2 before:border-l peer-focus:before:border-l-2 before:pointer-events-none before:transition-all peer-disabled:before:border-transparent after:content[' '] after:block after:flex-grow after:box-border after:w-2.5 after:h-1.5 after:mt-[6.5px] after:ml-1 peer-placeholder-shown:after:border-transparent after:rounded-tr-md after:border-t peer-focus:after:border-t-2 after:border-r peer-focus:after:border-r-2 after:pointer-events-none after:transition-all peer-disabled:after:border-transparent peer-placeholder-shown:leading-[3.75] text-gray-500 peer-focus:text-gray-900 before:border-blue-gray-200 peer-focus:before:!border-gray-900 after:border-blue-gray-200 peer-focus:after:!border-gray-900">Enter Postal code
               </label>
             </div>
@@ -328,7 +334,7 @@ function Form1() {
                 data-testid="loader"
               />}Verify</div>}
             {otp1.verified && <div className='p-2 w-fit gap-3 flex justify-center items-center text-green rounded-md hover:cursor-pointer'>Verified</div>}
-
+            <div id="recaptcha1" className=''></div>
           </div>
         </div>
         <div className='w-full flex flex-col gap-4 p-2 lg:p-4  rounded shadow-md'>
@@ -351,13 +357,13 @@ function Form1() {
               <div className='flex gap-2 justify-between w-1/2'>
                 <div className=''>From  </div>
                 <div className=''>
-                  <input name="from" value={hospitalDetails.from} onChange={handleInputChange} type='time'/>
+                  <input name="from" value={hospitalDetails.from||"08:00"} onChange={handleInputChange} type='time'/>
                 </div>
               </div>
               <div className='flex gap-2 justify-between w-1/2'>
                 <div className=''>To  </div>
                 <div className=''>
-                  <input name="to" value={hospitalDetails.to} onChange={handleInputChange} type='time'/>
+                  <input name="to"  value={hospitalDetails.to||"20:00"} onChange={handleInputChange} type='time'/>
                 </div>
               </div>
             </div>
@@ -393,6 +399,7 @@ function Form1() {
                 aria-label="Loading Spinner"
                 data-testid="loader"
               />}Send otp</div>}
+              
             {otp2.flag && !otp2.verified && <div onClick={()=>handleVerifyOTP(2)} className='p-2 w-fit gap-3 flex justify-center items-center blue text-white rounded-md hover:cursor-pointer'>
             {<ClipLoader
                 color={"#fff"}
@@ -402,6 +409,7 @@ function Form1() {
                 data-testid="loader"
               />}Verify</div>}
             {otp2.verified && <div className='p-2 w-fit gap-3 flex justify-center items-center text-green rounded-md hover:cursor-pointer'>Verified</div>}
+            <div id="recaptcha2" className=''></div>
           </div>
           <div className='flex-col  my-4 w-full md:flex-row  gap-4'>
             <div className="relative min-w-[200px] h-10">
@@ -417,8 +425,6 @@ function Form1() {
           </div>
         </div>
       </div>
-      <div id="recaptcha1" className='absolute bottom-[50%] right-[50%] z-20'></div>
-      <div id="recaptcha2" className='absolute bottom-[50%] right-[50%] z-20'></div>
     </div>
   )
 }

@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 
 const HospitalSchema = new mongoose.Schema({
     hospitalId: String,
+    email:String,
     hospitalDetails: {
         daysAvailabilty: {
             M: Boolean,

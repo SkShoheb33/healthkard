@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
 // import { FcGoogle } from "react-icons/fc";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { RxCross2 } from "react-icons/rx";
 import { Link, useNavigate } from 'react-router-dom';
 import OTPInput from "otp-input-react";
@@ -43,14 +45,17 @@ function Login() {
         console.log(otp,email)
         console.log(userEnteredOtp,otp)
         if(userEnteredOtp === otp){
+            toast.success("Logged in successfully");
             navigate('/hospital/dashboard/')
         }else{
+            toast.error("Please enter correct otp!");
             console.log("Wrong otp entered");
         }
         setSending(false);
     }
   return (
     <div div className='bg-[rgba(0,0,0,0.5)] relative h-[100vh] w-full flex justify-center items-center'>
+        <ToastContainer />
         <div className='bg-white  shadow-md flex flex-col gap-6 w-2/3 lg:w-1/3 p-6 border rounded-md'>
             <div className='text-xl font-bold flex justify-between'>
                 <div className=''>Login</div>

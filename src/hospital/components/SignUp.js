@@ -5,7 +5,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import OTPInput from "otp-input-react";
 import ClipLoader from "react-spinners/ClipLoader";
 import axios from 'axios';
-
+// import crypto from 'crypto';
 function SignUp() {
     const navigate = useNavigate();
     const [isOtpSent, setIsOtpSent] = useState(false);
@@ -25,6 +25,18 @@ function SignUp() {
         setOtp(OTP);
         return OTP;
     }
+    let generateUniqueId= () => {
+        const prefix = "HH24"
+        const date = new Date();
+        const seconds = date.getSeconds();
+        const minutes = date.getMinutes();
+        const milliseconds = date.getMilliseconds();
+        const uniqueId = String(seconds).padStart(2, '0') + 
+                         String(minutes).padStart(2, '0') + 
+                         String(milliseconds).padStart(3, '0');
+        
+        return prefix + uniqueId;
+    }
 
     const sendOTP = async() => {
         if (hospitalName === '') {
@@ -36,7 +48,8 @@ function SignUp() {
             setEmailError(true);
             return;
         }
-        localStorage.setItem('hospitalName',hospitalName);
+        // localStorage.setItem('hospitalName',hospitalName);
+        localStorage.setItem('hospital_id',generateUniqueId());
         setSending(true);
         axios.post('http://localhost:3002/sendOTP', { to: email, subject: "Verification code from HealthKard", otp: generateOtp() })
             .then((response) => {
@@ -49,8 +62,6 @@ function SignUp() {
     }
     const verifyOTP = ()=>{
         setSending(true);
-        console.log(otp,email)
-        console.log(userEnteredOtp,otp)
         if(userEnteredOtp === otp){
             navigate('/hospitalRegister/hospitalDetails/')
             localStorage.setItem('email',email);
@@ -59,6 +70,7 @@ function SignUp() {
         }
         setSending(false);
     }
+    
 
     return (
         <div className='bg-[rgba(0,0,0,0.5)] relative h-[100vh] w-full flex justify-center items-center'>

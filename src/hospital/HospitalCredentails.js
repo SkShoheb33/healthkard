@@ -7,10 +7,11 @@ function HospitalCredentails() {
   const navigate =  useNavigate();
   useEffect(()=>{
     let storedEmail = JSON.stringify(localStorage.getItem('email'));
-    if(storedEmail){
+    console.log(storedEmail,storedEmail===null)
+    if(storedEmail===null){
       navigate('/hospitalRegister/hospitalDetails/');
     }
-  },[]);
+  },[navigate]);
   return (
     <div className='flex flex-col relative'>
       <div className='fixed top-0 left-0 w-full'>

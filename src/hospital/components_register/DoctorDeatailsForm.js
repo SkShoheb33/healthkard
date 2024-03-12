@@ -6,7 +6,7 @@ import PhoneInput from 'react-phone-input-2';
 
 function DoctorDeatailsForm({index,doctor}) {
   const [doctorDetails, setDoctorDetails] = useState(doctor);
-  const [progress, setProgress] = useState(0);
+  // const [progress, setProgress] = useState(0);
   const [doctorPdfs, setDoctorPdfs] = useState(() => {
     let storedDoctorsPdfs = localStorage.getItem('doctorPdfs');
     return storedDoctorsPdfs ? JSON.parse(storedDoctorsPdfs) : [];
@@ -17,39 +17,45 @@ function DoctorDeatailsForm({index,doctor}) {
     localStorage.setItem('doctorList', JSON.stringify(storedDoctorList));
   }, [doctorDetails, index]);
 
-  const uploadImage =  (selectedImage, field) => {
-    console.log(selectedImage.name,field,index);
+  const uploadImage = (selectedImage, field) => {
     if (selectedImage) {
-      const imageRef = ref(storage, 'HealthKard/' + field + '/' + selectedImage.name);
-      const uploadTask = uploadBytesResumable(imageRef, selectedImage);
-      const storedDoctorsPdfs = JSON.parse(localStorage.getItem('doctorPdfs')) || [];
-      storedDoctorsPdfs[index] = selectedImage.name;
-      console.log('uploading', storedDoctorsPdfs, index);
-      setDoctorPdfs(storedDoctorsPdfs);
-      localStorage.setItem('doctorPdfs', JSON.stringify(storedDoctorsPdfs));
-      uploadTask.on(
-        'state_changed',
-        (snapshot) => {
-          setProgress((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
-        },
-        (error) => {
-          console.error('Error uploading image:', error);
-        },
-        () => {
-          getDownloadURL(uploadTask.snapshot.ref).then((imageUrl) => {
-            setDoctorDetails({ ...doctorDetails, [field + 'URL']: imageUrl });
-            setDoctorDetails((prevState) => ({
-              ...prevState,
-              [field + 'URL']: imageUrl,
-            }));
-          });
-        }
-      );
+        const imageRef = ref(storage, 'HealthKard/' + field + '/' + selectedImage.name);
+        const uploadTask = uploadBytesResumable(imageRef, selectedImage);
+        
+        uploadTask.on(
+            'state_changed',
+            (snapshot) => {
+                // Handle upload progress if needed
+                const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                console.log('Upload is ' + progress + '% done');
+            },
+            (error) => {
+                console.error('Error uploading image:', error);
+            },
+            () => {
+                // Handle successful upload
+                getDownloadURL(uploadTask.snapshot.ref).then((imageUrl) => {
+                    // Update doctorDetails state with the image URL
+                    setDoctorDetails((prevState) => ({
+                        ...prevState,
+                        [field + 'URL']: imageUrl,
+                    }));
+                    let temp =[...doctorPdfs];
+                    temp[index] = selectedImage.name;
+                    setDoctorPdfs(temp);
+                    localStorage.setItem('doctorPdfs',JSON.stringify(temp));
+                    console.log(temp);
+                });
+            }
+        );
+        
     } else {
-      alert('Please select an image to upload.');
+        alert('Please select an image to upload.');
     }
-    setProgress(0);
-  };
+};
+
+
+
 
   const deleteFile = () => {
     console.log(index);

@@ -11,11 +11,11 @@ function HospitalRegister() {
   const [prevBtn, setPrevBtn] = useState(false);
   const [nextBtn, setNextBtn] = useState(true);
   useEffect(()=>{
-    let storedEmail = JSON.stringify(localStorage.getItem('email'));
+    let storedEmail = localStorage.getItem('email');
     if(!storedEmail){
       navigate('/auth/signup');
     }
-  },[]);
+  },[navigate]);
   useEffect(() => {
     if(location.pathname === '/hospitalRegister/hospitalDetails' || location.pathname === '/hospitalRegister/hospitalDetails/'){
       setPrevBtn(false);
@@ -83,7 +83,8 @@ function HospitalRegister() {
         if(storedMediaDetails.desc && storedMediaDetails.doctorImageURL && storedMediaDetails.hospitalImageURL
           && storedMediaDetails.logoURL && storedMediaDetails.videoURL){
               axios.post('http://localhost:3002/saveHospitalData',{
-                hospitalId:'HKHO2012',
+                hospitalId:JSON.stringify(localStorage.getItem('hospital_id')),
+                email:JSON.stringify(localStorage.getItem('email')),
                 hospitalDetails:storedHospitalDetails,
                 doctorList:storedDoctorList,
                 mediaDetails:storedMediaDetails
@@ -91,6 +92,7 @@ function HospitalRegister() {
                 console.log(result);
                 navigate('success');
                 localStorage.clear();
+                localStorage.setItem('email',"1");
               }).catch((err) => {
                 notify();
               });

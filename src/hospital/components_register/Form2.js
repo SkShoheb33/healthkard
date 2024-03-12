@@ -1,10 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { IoIosAddCircleOutline } from "react-icons/io";
 import DoctorDetailsForm from './DoctorDeatailsForm';
-import { ref, uploadBytesResumable, getDownloadURL, deleteObject } from 'firebase/storage';
-import { storage } from '../../firebase-config';
-import { RxCross2 } from 'react-icons/rx';
-import PhoneInput from 'react-phone-input-2';
 
 function Form2() {
   const [doctorList, setDoctorList] = useState(() => {

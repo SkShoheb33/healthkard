@@ -24,7 +24,7 @@ function Form3() {
     useEffect(() => {
         localStorage.setItem('mediaDetails', JSON.stringify(mediaDetails));
         localStorage.setItem('images',JSON.stringify(images));
-    }, [mediaDetails]);
+    }, [mediaDetails,images]);
     // upload delete functions
     const uploadImage = (selectedImage, field, index) => {
         if (selectedImage) {
