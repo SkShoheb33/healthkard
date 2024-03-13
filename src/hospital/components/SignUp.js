@@ -4,6 +4,7 @@ import { RxCross2 } from "react-icons/rx";
 import { Link, useNavigate } from 'react-router-dom';
 import OTPInput from "otp-input-react";
 import ClipLoader from "react-spinners/ClipLoader";
+import { ToastContainer, toast } from 'react-toastify';
 import axios from 'axios';
 // import crypto from 'crypto';
 function SignUp() {
@@ -16,6 +17,7 @@ function SignUp() {
     const [hospitalName, setHospitalName] = useState("");
     const [userEnteredOtp,setUserEnteresOtp] = useState(null);
     const [sending,setSending] = useState(false);
+    const [isCheckBoxChecked,setIsCheckBoxChecked] = useState(false);
     const generateOtp = () => {
         let digits = '0123456789';
         let OTP = '';
@@ -48,17 +50,25 @@ function SignUp() {
             setEmailError(true);
             return;
         }
-        // localStorage.setItem('hospitalName',hospitalName);
+        if(!isCheckBoxChecked){
+            document.getElementById('checkbox-text').style.color = "red";
+            return;
+        }
+        let emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if(!emailPattern.test(email)){
+            toast.error("Please enter valid email");
+            return;
+        }
         localStorage.setItem('hospital_id',generateUniqueId());
         setSending(true);
         axios.post('http://localhost:3002/sendOTP', { to: email, subject: "Verification code from HealthKard", otp: generateOtp() })
             .then((response) => {
                 setIsOtpSent(true);
-                setSending(false);
             })
             .catch((error) => {
-                console.error("Error sending OTP:", error);
+                toast.error("error while sending otp");
             });
+            setSending(false);
     }
     const verifyOTP = ()=>{
         setSending(true);
@@ -66,11 +76,17 @@ function SignUp() {
             navigate('/hospitalRegister/hospitalDetails/')
             localStorage.setItem('email',email);
         }else{
-            console.log("Wrong otp entered");
+            toast.error("Please re-enter correct otp");
         }
         setSending(false);
     }
-    
+    function hideMiddleEmail(email) {
+        const parts = email.split('@');
+        const firstPart = parts[0];
+        const length = firstPart.length;
+        const hiddenPart = firstPart.substring(0, 2) + '*'.repeat(length - 3) + firstPart.substring(length - 1);
+        return hiddenPart + '@' + parts[1];
+      }
 
     return (
         <div className='bg-[rgba(0,0,0,0.5)] relative h-[100vh] w-full flex justify-center items-center'>
@@ -94,8 +110,8 @@ function SignUp() {
                             {emailError && <div className='text-xs text-red-500 mb-2'>*Please enter email address</div>}
                         </div>
                         <div className="flex items-center mb-4">
-                            <input id="default-checkbox" type="checkbox" value="" className="w-4 h-4 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 dark:focus:ring-green-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" />
-                            <label htmlFor="default-checkbox" className="ms-2 text-sm font-medium text-gray-500">I agree to the <a className="font-bold text-blue" href='https://firebasestorage.googleapis.com/v0/b/healthkard.appspot.com/o/HealthKard%2FHealthkard%20Hospital%20TCs.pdf?alt=media&token=e807125d-6ffa-4d4c-b2d5-41ac0cd66c27' target='__blank'> terms and conditions</a> of HealthKard</label>
+                            <input onChange={(e)=>setIsCheckBoxChecked(e.target.checked)} id="default-checkbox" type="checkbox" value="" className="w-4 h-4 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 dark:focus:ring-green-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" />
+                            <label htmlFor="default-checkbox" id='checkbox-text' className="ms-2 text-sm font-medium text-gray-500">I agree to the <a className="font-bold text-blue" href='https://firebasestorage.googleapis.com/v0/b/healthkard.appspot.com/o/HealthKard%2FHealthkard%20Hospital%20TCs.pdf?alt=media&token=e807125d-6ffa-4d4c-b2d5-41ac0cd66c27' target='__blank'> terms and conditions</a> of HealthKard</label>
                         </div>
                     </div>
                 )}
@@ -103,10 +119,10 @@ function SignUp() {
                     <div className='flex gap-4 flex-col'>
                         <div className=''>Enter OTP</div>
                         <OTPInput value={userEnteredOtp} onChange={setUserEnteresOtp} autoFocus OTPLength={4} otpType="number" disabled={false} inputClassName='border-2 border-black rounded-md ' className='w-full flex justify-between' />
-                        <div className='text-sm px-2'>Enter OTP received at <div className='font-bold'>{email}</div></div>
+                        <div className='flex gap-2 text-sm px-2'>Enter OTP received at <div className='font-bold'>{hideMiddleEmail(email)}</div></div>
                     </div>
                 )}
-                {!isOtpSent && <div onClick={sendOTP} className='hover:cursor-pointer flex gap-2 items-center justify-center green text-white text-center rounded-md p-2'>
+                {!isOtpSent && <button onClick={sendOTP} disabled={false} className='hover:cursor-pointer flex gap-2 items-center justify-center green text-white text-center rounded-md p-2'>
                     <ClipLoader
                         color={"#fff"}
                         loading={sending}
@@ -114,7 +130,7 @@ function SignUp() {
                         aria-label="Loading Spinner"
                         data-testid="loader"/>
                     Send Otp
-                </div>}
+                </button>}
                 {isOtpSent && <div onClick={verifyOTP} className='hover:cursor-pointer flex gap-2 items-center justify-center green text-white text-center rounded-md p-2'>
                     <ClipLoader
                         color={"#fff"}
@@ -134,6 +150,7 @@ function SignUp() {
                     <div className=''>Sign in with Google</div>
                 </div>*/}
             </div>
+            <ToastContainer />
         </div>
     );
 }

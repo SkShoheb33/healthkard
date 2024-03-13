@@ -106,7 +106,7 @@ function Form3() {
                     <div>{images[1]}</div>
                     <RxCross2 onClick={()=>deleteFile(mediaDetails.hospitalImageURL,"hospitalImageURL",1)} className='hover:text-red-500 hover:cursor-pointer'/>
                 </div>}
-                <div className='text-gray-400 text-center mt-4 text-xl'>Hospital video will autoplay in the banner</div>
+                <div className='text-gray-400 text-center mt-4 text-xl'>Hospital video will autoplay in the banner (Optional)</div>
                 <label id="videoBtn" htmlFor="video" className="hover:cursor-pointer blue text-white h-10 flex justify-center items-center rounded-md">
                     <span>Upload Video</span>
                     <input type="file" id="video" className="hidden" onChange={(e) => uploadImage(e.target.files[0], 'video',2)}  accept="video/*"/>
@@ -115,7 +115,7 @@ function Form3() {
                     <div>{images[2]}</div>
                     <RxCross2 onClick={()=>deleteFile(mediaDetails.videoURL,"videoURL",2)} className='hover:text-red-500 hover:cursor-pointer'/>
                 </div>}
-                <div className='text-gray-400 text-center mt-4 text-xl'>Doctor photo will be displayed in the description</div>
+                <div className='text-gray-400 text-center mt-4 text-xl'>Doctor photo will be displayed in the description (Optional)</div>
                 <label id="doctorImageBtn" htmlFor="doctorImage" className="hover:cursor-pointer blue text-white h-10 flex justify-center items-center rounded-md">
                     <span>Upload Doctor Image</span>
                     <input type="file" id="doctorImage" className="hidden" onChange={(e) => uploadImage(e.target.files[0], 'doctorImage',3)}  accept="image/*"/>
@@ -124,7 +124,7 @@ function Form3() {
                     <div>{images[3]}</div>
                     <RxCross2 onClick={()=>deleteFile(mediaDetails.doctorImageURL,"doctorImageURL",3)} className='hover:text-red-500 hover:cursor-pointer'/>
                 </div>}
-                <div className='text-gray-400 text-center mt-4 text-xl'>Add more photos to show public</div>
+                <div className='text-gray-400 text-center mt-4 text-xl'>Add more photos to show public (Optional)</div>
                 <div className='flex flex-wrap'>
                     {mediaDetails.achivements.map((achiv,index)=>{
                         return(

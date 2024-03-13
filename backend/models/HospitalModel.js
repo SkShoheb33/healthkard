@@ -3,6 +3,18 @@ const mongoose = require('mongoose');
 const HospitalSchema = new mongoose.Schema({
     hospitalId: String,
     email:String,
+    isverified:{
+        type: String,
+        default: '0'
+    },
+    createdDate:{
+        type: String,
+        default: new Date().toISOString()
+    },
+    updatedDate:{
+        type: String,
+        default: new Date().toISOString()
+    },
     hospitalDetails: {
         daysAvailabilty: {
             M: Boolean,
@@ -25,6 +37,8 @@ const HospitalSchema = new mongoose.Schema({
         hospitalTradeName: String,
         licenseNumber: String,
         address: {
+            lat:String,
+            lng:String,
             city: String,
             code : String,
             country: String,

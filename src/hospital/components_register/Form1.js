@@ -7,6 +7,8 @@ import PhoneInput from 'react-phone-input-2'
 import ClipLoader from "react-spinners/ClipLoader";
 import 'react-phone-input-2/lib/style.css'
 import { RecaptchaVerifier, signInWithPhoneNumber } from 'firebase/auth';
+import { ToastContainer, toast,Bounce } from 'react-toastify';
+import UploadSplashScreen from '../components/UploadSplashScreen';
 function Form1() {
   const [hospitalDetails, setHospitalDetails] = useState(() => {
     const storedHospitalDetails = localStorage.getItem('hospitalDetails');
@@ -32,6 +34,8 @@ function Form1() {
       hospitalTradeName: '',
       licenseNumber: '',
       address: {
+        lat:'',
+        lng:'',
         street:'',
         landmark:'',
         city:'',
@@ -59,11 +63,7 @@ function Form1() {
       [name]: value,
     }));
   };
-
-
- 
-  // use effect sections
-  
+  // use effect sections  
   useEffect(() => {
     const storedHospitalDetails = JSON.parse(localStorage.getItem('hospitalDetails'));
     if (storedHospitalDetails && storedHospitalDetails.daysAvailabilty) {
@@ -93,6 +93,16 @@ function Form1() {
     if(storedHospitalDetails.hospitalOwnerContactNumber){
       setOtp2({otp:'',flag:false,verified:true})
     }
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition(function (position) {
+        setHospitalDetails({...hospitalDetails,address:{...hospitalDetails.address,
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        }});
+      });
+    } else {
+      console.log("Geolocation is not available in your browser.");
+    }
   },[]);
   const [progress,setProgress] = useState(0);
   // upload and delete
@@ -105,7 +115,6 @@ function Form1() {
           (snapshot) => {
               // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
                   setProgress((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
-                  console.log('Upload is ' + progress + '% done');
                   return;
               },
               (error) => {
@@ -119,6 +128,7 @@ function Form1() {
                         const temp = [...prevFileNames];
                         temp[index] = selectedPdf.name;
                         localStorage.setItem('fileNames', JSON.stringify(temp));
+                        setProgress(0)
                         return temp;
                       });
                       setHospitalDetails((prevState) => ({
@@ -138,14 +148,17 @@ function Form1() {
     // Delete the file
     deleteObject(fileRef)
         .then(() => {
-            console.log('File deleted successfully');
-            // Update fileNames state after deletion
             setFileNames(prevFileNames => {
                 const temp = [...prevFileNames];
                 temp[index] = null; 
                 localStorage.setItem('fileNames', JSON.stringify(temp)); 
                 return temp;
             });
+            if(index===0)
+              setHospitalDetails({...hospitalDetails,hospitalGSTFile:""});
+            else
+              setHospitalDetails({...hospitalDetails,hospitalLicense:""});
+
         })
         .catch((error) => {
             console.error('Error deleting file:', error);
@@ -212,17 +225,21 @@ function Form1() {
       ...prevState,
       hospitalOwnerContactNumber: ownerPhone,
     }));
-    setLoading2(true);
+    setLoading2(false);
      }
      return;
    }catch(error){
+      toast.error("Please re-enter the correct otp",{transition: Bounce});
      console.log("Error while verifying otp",error);
+     setLoading1(false);
+     setLoading2(false);
    }
  }
 
 
   return (
-    <div className=' lg:w-4/5 mx-auto'>
+    <div className='relative  lg:w-4/5 mx-auto'>
+      {progress!==0 && <UploadSplashScreen progress={progress}/>}
       <div className='text-2xl lg:text-4xl mt-7 font-medium'>Hospital Details</div>
       <div className='w-full p-2 flex flex-col mt-10 gap-8'>
         <div className="w-full">
@@ -267,14 +284,14 @@ function Form1() {
         </label>}
         {fileNames[1] && <div className='flex gap-2 items-center bg-gray-200 w-fit p-1 rounded-md '>
             <div>{fileNames[1]}</div>
-            <RxCross2 onClick={()=>deleteFile(hospitalDetails.hospitalGSTFile,1)} className='hover:text-red-500 hover:cursor-pointer'/>
+            <RxCross2 onClick={()=>deleteFile(hospitalDetails.hospitalLicense,1)} className='hover:text-red-500 hover:cursor-pointer'/>
         </div>}
         <div className='flex flex-col gap-5 shadow-md p-2 lg:p-4 rounded-md'>
-          <div className='text-xl lg:text-2xl font-semibold'>Please place the pin accurately at your outlet’s location on the map</div>
+          <div className='text-xl lg:text-2xl font-semibold'>Please Enter hospital location details.</div>
           <div className="w-full flex flex-wrap gap-4 justify-between">
             <div className="relative w-5/12 min-w-[200px] h-10 ">
               <input name="street" value={hospitalDetails.address.street} onChange={(e)=>setHospitalDetails({...hospitalDetails,address:{...hospitalDetails.address,street:e.target.value}})} className="border peer w-full h-full bg-transparent text-blue-gray-700 font-sans font-normal outline outline-0 focus:outline-0 disabled:bg-blue-gray-50 disabled:border-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200  focus:border-2 border-t-transparent focus:border-t-transparent text-sm px-3 py-2.5 rounded-[7px]  focus:border-gray-900" placeholder=" " />
-              <label className="flex w-full h-full select-none pointer-events-none absolute left-0 font-normal !overflow-visible truncate peer-placeholder-shown:text-blue-gray-500 leading-tight peer-focus:leading-tight peer-disabled:text-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500 transition-all -top-1.5 peer-placeholder-shown:text-sm text-[11px] peer-focus:text-[11px] before:content[' '] before:block before:box-border before:w-2.5 before:h-1.5 before:mt-[6.5px] before:mr-1 peer-placeholder-shown:before:border-transparent before:rounded-tl-md before:border-t peer-focus:before:border-t-2 before:border-l peer-focus:before:border-l-2 before:pointer-events-none before:transition-all peer-disabled:before:border-transparent after:content[' '] after:block after:flex-grow after:box-border after:w-2.5 after:h-1.5 after:mt-[6.5px] after:ml-1 peer-placeholder-shown:after:border-transparent after:rounded-tr-md after:border-t peer-focus:after:border-t-2 after:border-r peer-focus:after:border-r-2 after:pointer-events-none after:transition-all peer-disabled:after:border-transparent peer-placeholder-shown:leading-[3.75] text-gray-500 peer-focus:text-gray-900 before:border-blue-gray-200 peer-focus:before:!border-gray-900 after:border-blue-gray-200 peer-focus:after:!border-gray-900">Enter Street addre
+              <label className="flex w-full h-full select-none pointer-events-none absolute left-0 font-normal !overflow-visible truncate peer-placeholder-shown:text-blue-gray-500 leading-tight peer-focus:leading-tight peer-disabled:text-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500 transition-all -top-1.5 peer-placeholder-shown:text-sm text-[11px] peer-focus:text-[11px] before:content[' '] before:block before:box-border before:w-2.5 before:h-1.5 before:mt-[6.5px] before:mr-1 peer-placeholder-shown:before:border-transparent before:rounded-tl-md before:border-t peer-focus:before:border-t-2 before:border-l peer-focus:before:border-l-2 before:pointer-events-none before:transition-all peer-disabled:before:border-transparent after:content[' '] after:block after:flex-grow after:box-border after:w-2.5 after:h-1.5 after:mt-[6.5px] after:ml-1 peer-placeholder-shown:after:border-transparent after:rounded-tr-md after:border-t peer-focus:after:border-t-2 after:border-r peer-focus:after:border-r-2 after:pointer-events-none after:transition-all peer-disabled:after:border-transparent peer-placeholder-shown:leading-[3.75] text-gray-500 peer-focus:text-gray-900 before:border-blue-gray-200 peer-focus:before:!border-gray-900 after:border-blue-gray-200 peer-focus:after:!border-gray-900">Enter Street address
               </label>
             </div>
             <div className="relative w-5/12 min-w-[200px] h-10 ">
@@ -324,7 +341,7 @@ function Form1() {
                 size={20}
                 aria-label="Loading Spinner"
                 data-testid="loader"
-              />}Send otp</div>}
+              />}SEND OTP</div>}
             {otp1.flag && !otp1.verified && <div onClick={()=>handleVerifyOTP(1)} className='p-2 w-fit gap-3 flex justify-center items-center blue text-white rounded-md hover:cursor-pointer'>
             {<ClipLoader
                 color={"#fff"}
@@ -332,8 +349,8 @@ function Form1() {
                 size={20}
                 aria-label="Loading Spinner"
                 data-testid="loader"
-              />}Verify</div>}
-            {otp1.verified && <div className='p-2 w-fit gap-3 flex justify-center items-center text-green rounded-md hover:cursor-pointer'>Verified</div>}
+              />}VERIFY</div>}
+            {otp1.verified && <div className='p-2 w-fit gap-3 flex justify-center items-center text-green rounded-md hover:cursor-pointer text-xl font-bold'>Verified</div>}
             <div id="recaptcha1" className=''></div>
           </div>
         </div>
@@ -353,7 +370,7 @@ function Form1() {
           </div>
           <div className='flex flex-col mt-1 p-1 gap-1'>
             <div className='flex flex-col  gap-2 md:gap-8'>
-              <div className='font-semibold'>Time</div>
+              <div className='font-semibold'>Time (Optional)</div>
               <div className='flex gap-2 justify-between w-1/2'>
                 <div className=''>From  </div>
                 <div className=''>
@@ -398,7 +415,7 @@ function Form1() {
                 size={20}
                 aria-label="Loading Spinner"
                 data-testid="loader"
-              />}Send otp</div>}
+              />}SEND OTP</div>}
               
             {otp2.flag && !otp2.verified && <div onClick={()=>handleVerifyOTP(2)} className='p-2 w-fit gap-3 flex justify-center items-center blue text-white rounded-md hover:cursor-pointer'>
             {<ClipLoader
@@ -407,8 +424,8 @@ function Form1() {
                 size={20}
                 aria-label="Loading Spinner"
                 data-testid="loader"
-              />}Verify</div>}
-            {otp2.verified && <div className='p-2 w-fit gap-3 flex justify-center items-center text-green rounded-md hover:cursor-pointer'>Verified</div>}
+              />}VERIFY</div>}
+            {otp2.verified && <div className='p-2 w-fit gap-3 flex justify-center items-center text-green rounded-md hover:cursor-pointer text-xl font-bold'>Verified</div>}
             <div id="recaptcha2" className=''></div>
           </div>
           <div className='flex-col  my-4 w-full md:flex-row  gap-4'>

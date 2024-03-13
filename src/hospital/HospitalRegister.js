@@ -80,8 +80,8 @@ function HospitalRegister() {
               return;
           }
         }
-        if(storedMediaDetails.desc && storedMediaDetails.doctorImageURL && storedMediaDetails.hospitalImageURL
-          && storedMediaDetails.logoURL && storedMediaDetails.videoURL){
+        if(storedMediaDetails.desc && storedMediaDetails.hospitalImageURL
+          && storedMediaDetails.logoURL ){
               axios.post('http://localhost:3002/saveHospitalData',{
                 hospitalId:JSON.stringify(localStorage.getItem('hospital_id')),
                 email:JSON.stringify(localStorage.getItem('email')),
@@ -117,6 +117,13 @@ function HospitalRegister() {
             <Outlet/>
           </div>
           <div className='bg-white fixed font-bold  bottom-0 left-0 h-16 flex justify-between items-center  w-full '>
+            {!prevBtn && (
+              <div
+                onClick={prev}
+                className='mx-16 b-blue border-2 rounded px-4 py-1 text-blue hover:cursor-not-allowed'>
+                Prev
+              </div>
+            )}
             {prevBtn && (
               <div
                 onClick={prev}
@@ -127,7 +134,7 @@ function HospitalRegister() {
             {nextBtn && (
               <div
                 onClick={next}
-                className='mx-16 b-blue border-2 rounded px-4 py-1 text-blue hover:text-white hover:cursor-pointer hover:bg-[#303486]'>
+                className='mx-16 b-blue border-2 rounded px-4 py-1 text-blue hover:text-white hover:cursor-pointer  hover:bg-[#303486]'>
                 Next
               </div>
             )}
