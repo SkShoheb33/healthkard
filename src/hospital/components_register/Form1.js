@@ -9,6 +9,7 @@ import 'react-phone-input-2/lib/style.css'
 import { RecaptchaVerifier, signInWithPhoneNumber } from 'firebase/auth';
 import { ToastContainer, toast,Bounce } from 'react-toastify';
 import UploadSplashScreen from '../components/UploadSplashScreen';
+import { json } from 'react-router-dom';
 function Form1() {
   const [hospitalDetails, setHospitalDetails] = useState(() => {
     const storedHospitalDetails = localStorage.getItem('hospitalDetails');
@@ -109,7 +110,7 @@ function Form1() {
   const uploadPdf = (selectedPdf,field,index) => {
       if (selectedPdf) {
           // console.log(field+'/'+selectedPdf.name);
-          const imageRef = ref(storage,'HealthKard/'+ field+'/'+selectedPdf.name);
+          const imageRef = ref(storage,'Hospital/'+localStorage.getItem('hospital_id')+'/'+ field+'/'+selectedPdf.name);
           const uploadTask = uploadBytesResumable(imageRef, selectedPdf);
           uploadTask.on('state_changed',
           (snapshot) => {

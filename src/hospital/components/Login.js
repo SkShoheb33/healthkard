@@ -24,8 +24,23 @@ function Login() {
         setOtp(OTP);
         return OTP;
     }
+    const isAlreadyPresentInDatabase = async (email) => {
+        try {
+            const response = await axios.get(`http://localhost:3002/checkMail/${email}`);
+            console.log(response.data.isverified === "1");
+            return response.data.isverified === "1";
+        } catch (error) {
+            console.error("Error checking email in database:", error);
+            return false; // Return false in case of error
+        }
+    };
     const sendOTP = async() => {
-        
+        const isPresent = await isAlreadyPresentInDatabase(email);
+        if(!isPresent){
+            toast.error("email doesn't exist.")
+            navigate('../signup')
+            return;
+        }
         if (email === '') {
             setEmailError(true);
             return;

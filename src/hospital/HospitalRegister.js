@@ -45,14 +45,56 @@ function HospitalRegister() {
   };
 
   const next = () => {
+    const storedHospitalDetails = JSON.parse(localStorage.getItem('hospitalDetails'));
+    const storedDoctorList = JSON.parse(localStorage.getItem('doctorList'));
     switch (location.pathname) {
+      case '/hospitalRegister/hospitalDetails/':
+        if(storedHospitalDetails.hospitalNumber &&
+          storedHospitalDetails.from && storedHospitalDetails.gstNumber && storedHospitalDetails.hospitalGSTFile &&
+          storedHospitalDetails.hospitalLegalName && storedHospitalDetails.hospitalLicense && 
+          storedHospitalDetails.hospitalOwnerContactNumber && storedHospitalDetails.hospitalOwnerEmail &&
+          storedHospitalDetails.hospitalOwnerFullName && storedHospitalDetails.hospitalTradeName &&
+          storedHospitalDetails.licenseNumber && storedHospitalDetails.address.city && storedHospitalDetails.address.code &&
+           storedHospitalDetails.address.country && storedHospitalDetails.address.landmark
+           && storedHospitalDetails.address.state && storedHospitalDetails.address.street && 
+          storedHospitalDetails.servicesOffered && storedHospitalDetails.to){
+            setPrevBtn(true);
+            navigate('/hospitalRegister/doctorDetails');
+          }else{
+            toast.error('Please fill all the fileds');
+          }
+        break;
       case '/hospitalRegister/hospitalDetails':
-        setPrevBtn(true);
-        navigate('/hospitalRegister/doctorDetails');
+        if(storedHospitalDetails.hospitalNumber &&
+          storedHospitalDetails.from && storedHospitalDetails.gstNumber && storedHospitalDetails.hospitalGSTFile &&
+          storedHospitalDetails.hospitalLegalName && storedHospitalDetails.hospitalLicense && 
+          storedHospitalDetails.hospitalOwnerContactNumber && storedHospitalDetails.hospitalOwnerEmail &&
+          storedHospitalDetails.hospitalOwnerFullName && storedHospitalDetails.hospitalTradeName &&
+          storedHospitalDetails.licenseNumber && storedHospitalDetails.address.city && storedHospitalDetails.address.code &&
+           storedHospitalDetails.address.country && storedHospitalDetails.address.landmark
+           && storedHospitalDetails.address.state && storedHospitalDetails.address.street && 
+          storedHospitalDetails.servicesOffered && storedHospitalDetails.to){
+            setPrevBtn(true);
+            navigate('/hospitalRegister/doctorDetails');
+          }else{
+            toast.error('Please fill all the fileds');
+          }
         break;
       case '/hospitalRegister/doctorDetails':
-        setNextBtn(false);
-        navigate('/hospitalRegister/mediaDetails');
+        let flag = true;
+        for(let i = 0;i<storedDoctorList.length;i++){
+          if(!(storedDoctorList[i].doctorLicenseURL && storedDoctorList[i].email &&
+             storedDoctorList[i].lisenceNumber && storedDoctorList[i].name && storedDoctorList[i].number &&
+             storedDoctorList[i].qualification)){
+              toast.error('Please fill all the fileds');
+              flag = false;
+          }
+          if(!flag)break;
+        }
+        if(flag){
+          setNextBtn(false);
+          navigate('/hospitalRegister/mediaDetails');
+        }
         break;
       default:
         break;
@@ -83,16 +125,15 @@ function HospitalRegister() {
         if(storedMediaDetails.desc && storedMediaDetails.hospitalImageURL
           && storedMediaDetails.logoURL ){
               axios.post('http://localhost:3002/saveHospitalData',{
-                hospitalId:JSON.stringify(localStorage.getItem('hospital_id')),
-                email:JSON.stringify(localStorage.getItem('email')),
+                hospitalId:localStorage.getItem('hospital_id'),
+                email:localStorage.getItem('email'),
+                isverified:'1',
                 hospitalDetails:storedHospitalDetails,
                 doctorList:storedDoctorList,
                 mediaDetails:storedMediaDetails
               }).then((result) => {
                 console.log(result);
                 navigate('success');
-                localStorage.clear();
-                localStorage.setItem('email',"1");
               }).catch((err) => {
                 notify();
               });

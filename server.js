@@ -64,3 +64,19 @@ app.post('/sendOTP', async (req, res) => {
         res.status(500).json({ error: "An error occurred while sending the email.", error });
     }
 });
+
+
+app.get('/checkMail/:email', async (req, res) => {
+    const email = req.params.email;
+    try {
+        const result = await HospitalModel.findOne({ email });
+        if (result) {
+            res.status(200).json({ email: result.email, isverified: result.isverified });
+        } else {
+            res.status(200).json({ email: "not found", isverified: "0" });
+        }
+    } catch (err) {
+        console.error("Error while checking the email:", err);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+});

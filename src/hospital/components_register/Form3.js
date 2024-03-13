@@ -31,7 +31,7 @@ function Form3() {
             let temp = [...images];
             temp[index] = selectedImage.name;
             setImages(temp);
-            const imageRef = ref(storage, 'HealthKard/' + field + '/' + selectedImage.name);
+            const imageRef = ref(storage, 'Hospital/'+localStorage.getItem('hospital_id')+'/' + field + '/' + selectedImage.name);
             const uploadTask = uploadBytesResumable(imageRef, selectedImage);
             uploadTask.on('state_changed',(snapshot) => {
                     setProgress((snapshot.bytesTransferred / snapshot.totalBytes) * 100);

@@ -19,7 +19,7 @@ function DoctorDeatailsForm({index,doctor}) {
 
   const uploadImage = (selectedImage, field) => {
     if (selectedImage) {
-        const imageRef = ref(storage, 'HealthKard/' + field + '/' + selectedImage.name);
+        const imageRef = ref(storage, 'Hospital/'+localStorage.getItem('hospital_id')+'/' + field + '/' + selectedImage.name);
         const uploadTask = uploadBytesResumable(imageRef, selectedImage);
         
         uploadTask.on(

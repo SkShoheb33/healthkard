@@ -6,6 +6,8 @@ import OTPInput from "otp-input-react";
 import ClipLoader from "react-spinners/ClipLoader";
 import { ToastContainer, toast } from 'react-toastify';
 import axios from 'axios';
+import { FaRegEdit } from "react-icons/fa";
+
 // import crypto from 'crypto';
 function SignUp() {
     const navigate = useNavigate();
@@ -39,8 +41,23 @@ function SignUp() {
         
         return prefix + uniqueId;
     }
-
+    const isAlreadyPresentInDatabase = async (email) => {
+        try {
+            const response = await axios.get(`http://localhost:3002/checkMail/${email}`);
+            console.log(response.data.isverified === "1");
+            return response.data.isverified === "1";
+        } catch (error) {
+            console.error("Error checking email in database:", error);
+            return false; // Return false in case of error
+        }
+    };
+    
     const sendOTP = async() => {
+        const isPresent = await isAlreadyPresentInDatabase(email);
+        if(isPresent){
+            toast.error("email already exist.")
+            return;
+        }
         if (hospitalName === '') {
             setHospitalError(true);
             return;
@@ -59,11 +76,12 @@ function SignUp() {
             toast.error("Please enter valid email");
             return;
         }
-        localStorage.setItem('hospital_id',generateUniqueId());
+        
         setSending(true);
         axios.post('http://localhost:3002/sendOTP', { to: email, subject: "Verification code from HealthKard", otp: generateOtp() })
             .then((response) => {
                 setIsOtpSent(true);
+                toast.success("Otp sent successfully")
             })
             .catch((error) => {
                 toast.error("error while sending otp");
@@ -73,7 +91,8 @@ function SignUp() {
     const verifyOTP = ()=>{
         setSending(true);
         if(userEnteredOtp === otp){
-            navigate('/hospitalRegister/hospitalDetails/')
+            navigate('/hospitalRegister/hospitalDetails/');
+            localStorage.setItem('hospital_id',generateUniqueId());
             localStorage.setItem('email',email);
         }else{
             toast.error("Please re-enter correct otp");
@@ -100,17 +119,17 @@ function SignUp() {
                 {!isOtpSent && (
                     <div className='w-full flex flex-col gap-6'>
                         <div className="relative w-full min-w-[200px] h-10">
-                            <input autoFocus onChange={(e) => { setHospitalName(e.target.value); setHospitalError(false) }} className="border-2 peer w-full h-full bg-transparent text-green-gray-700 font-sans font-normal outline outline-0 focus:outline-0 disabled:bg-green-gray-50 disabled:border-0 transition-all placeholder-shown:border placeholder-shown:border-green-gray-200 placeholder-shown:border-t-green-gray-200  focus:border-2 border-t-transparent focus:border-t-transparent text-sm px-3 py-2.5 rounded-[7px]  focus:border-gray-900" placeholder=" " />
+                            <input value={hospitalName} autoFocus onChange={(e) => { setHospitalName(e.target.value); setHospitalError(false) }} className="border-2 peer w-full h-full bg-transparent text-green-gray-700 font-sans font-normal outline outline-0 focus:outline-0 disabled:bg-green-gray-50 disabled:border-0 transition-all placeholder-shown:border placeholder-shown:border-green-gray-200 placeholder-shown:border-t-green-gray-200  focus:border-2 border-t-transparent focus:border-t-transparent text-sm px-3 py-2.5 rounded-[7px]  focus:border-gray-900" placeholder=" " />
                             <label className="flex w-full h-full select-none pointer-events-none absolute left-0 font-normal !overflow-visible truncate peer-placeholder-shown:text-green-gray-500 leading-tight peer-focus:leading-tight peer-disabled:text-transparent peer-disabled:peer-placeholder-shown:text-green-gray-500 transition-all -top-1.5 peer-placeholder-shown:text-sm text-[11px] peer-focus:text-[11px] before:content[' '] before:block before:box-border before:w-2.5 before:h-1.5 before:mt-[6.5px] before:mr-1 peer-placeholder-shown:before:border-transparent before:rounded-tl-md before:border-t peer-focus:before:border-t-2 before:border-l peer-focus:before:border-l-2 before:pointer-events-none before:transition-all peer-disabled:before:border-transparent after:content[' '] after:block after:flex-grow after:box-border after:w-2.5 after:h-1.5 after:mt-[6.5px] after:ml-1 peer-placeholder-shown:after:border-transparent after:rounded-tr-md after:border-t peer-focus:after:border-t-2 after:border-r peer-focus:after:border-r-2 after:pointer-events-none after:transition-all peer-disabled:after:border-transparent peer-placeholder-shown:leading-[3.75] text-gray-500 peer-focus:text-gray-900 before:border-green-gray-200 peer-focus:before:!border-gray-900 after:border-green-gray-200 peer-focus:after:!border-gray-900">Name of Hospital</label>
                             {hospitalError && <div className='text-xs text-red-500 mb-2'>*Please enter hospital name</div>}
                         </div>
                         <div className="relative w-full min-w-[200px] h-10">
-                            <input onChange={(e) => { setEmail(e.target.value); setEmailError(false) }} className="border-2 peer w-full h-full bg-transparent text-green-gray-700 font-sans font-normal outline outline-0 focus:outline-0 disabled:bg-green-gray-50 disabled:border-0 transition-all placeholder-shown:border placeholder-shown:border-green-gray-200 placeholder-shown:border-t-green-gray-200  focus:border-2 border-t-transparent focus:border-t-transparent text-sm px-3 py-2.5 rounded-[7px]  focus:border-gray-900" placeholder=" " />
+                            <input value={email} onChange={(e) => { setEmail(e.target.value); setEmailError(false) }} className="border-2 peer w-full h-full bg-transparent text-green-gray-700 font-sans font-normal outline outline-0 focus:outline-0 disabled:bg-green-gray-50 disabled:border-0 transition-all placeholder-shown:border placeholder-shown:border-green-gray-200 placeholder-shown:border-t-green-gray-200  focus:border-2 border-t-transparent focus:border-t-transparent text-sm px-3 py-2.5 rounded-[7px]  focus:border-gray-900" placeholder=" " />
                             <label className="flex w-full h-full select-none pointer-events-none absolute left-0 font-normal !overflow-visible truncate peer-placeholder-shown:text-green-gray-500 leading-tight peer-focus:leading-tight peer-disabled:text-transparent peer-disabled:peer-placeholder-shown:text-green-gray-500 transition-all -top-1.5 peer-placeholder-shown:text-sm text-[11px] peer-focus:text-[11px] before:content[' '] before:block before:box-border before:w-2.5 before:h-1.5 before:mt-[6.5px] before:mr-1 peer-placeholder-shown:before:border-transparent before:rounded-tl-md before:border-t peer-focus:before:border-t-2 before:border-l peer-focus:before:border-l-2 before:pointer-events-none before:transition-all peer-disabled:before:border-transparent after:content[' '] after:block after:flex-grow after:box-border after:w-2.5 after:h-1.5 after:mt-[6.5px] after:ml-1 peer-placeholder-shown:after:border-transparent after:rounded-tr-md after:border-t peer-focus:after:border-t-2 after:border-r peer-focus:after:border-r-2 after:pointer-events-none after:transition-all peer-disabled:after:border-transparent peer-placeholder-shown:leading-[3.75] text-gray-500 peer-focus:text-gray-900 before:border-green-gray-200 peer-focus:before:!border-gray-900 after:border-green-gray-200 peer-focus:after:!border-gray-900">Email</label>
                             {emailError && <div className='text-xs text-red-500 mb-2'>*Please enter email address</div>}
                         </div>
                         <div className="flex items-center mb-4">
-                            <input onChange={(e)=>setIsCheckBoxChecked(e.target.checked)} id="default-checkbox" type="checkbox" value="" className="w-4 h-4 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 dark:focus:ring-green-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" />
+                            <input checked={isCheckBoxChecked} onChange={(e)=>setIsCheckBoxChecked(e.target.checked)} id="default-checkbox" type="checkbox" value="" className="w-4 h-4 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 dark:focus:ring-green-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" />
                             <label htmlFor="default-checkbox" id='checkbox-text' className="ms-2 text-sm font-medium text-gray-500">I agree to the <a className="font-bold text-blue" href='https://firebasestorage.googleapis.com/v0/b/healthkard.appspot.com/o/HealthKard%2FHealthkard%20Hospital%20TCs.pdf?alt=media&token=e807125d-6ffa-4d4c-b2d5-41ac0cd66c27' target='__blank'> terms and conditions</a> of HealthKard</label>
                         </div>
                     </div>
@@ -118,8 +137,9 @@ function SignUp() {
                 {isOtpSent && (
                     <div className='flex gap-4 flex-col'>
                         <div className=''>Enter OTP</div>
-                        <OTPInput value={userEnteredOtp} onChange={setUserEnteresOtp} autoFocus OTPLength={4} otpType="number" disabled={false} inputClassName='border-2 border-black rounded-md ' className='w-full flex justify-between' />
-                        <div className='flex gap-2 text-sm px-2'>Enter OTP received at <div className='font-bold'>{hideMiddleEmail(email)}</div></div>
+                        <OTPInput value={userEnteredOtp} onChange={setUserEnteresOtp} autoFocus OTPLength={4} otpType="number" disabled={false} inputClassName='border-2 border-black rounded-md ' className='w-1/2 flex justify-between' />
+                        <div className='flex gap-2 text-sm px-2 items-center'>Enter OTP received at <div className='font-bold'>{hideMiddleEmail(email)}</div><div onClick={()=>setIsOtpSent(false)} className='hover:bg-gray-400 hover:cursor-pointer p-2 rounded-full hover:text-white'><FaRegEdit  className=''/></div></div>
+                        <div className='text-sm px-2 flex gap-2'>Didn't received? <div onClick={sendOTP} className='font-bold text-blue hover:cursor-pointer'>Resend</div></div>
                     </div>
                 )}
                 {!isOtpSent && <button onClick={sendOTP} disabled={false} className='hover:cursor-pointer flex gap-2 items-center justify-center green text-white text-center rounded-md p-2'>
