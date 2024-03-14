@@ -53,9 +53,12 @@ function SignUp() {
     };
     
     const sendOTP = async() => {
+        if(sending){
+            return;
+        }
         const isPresent = await isAlreadyPresentInDatabase(email);
         if(isPresent){
-            toast.error("email already exist.")
+            toast.error("Email already exist.")
             return;
         }
         if (hospitalName === '') {
@@ -76,24 +79,24 @@ function SignUp() {
             toast.error("Please enter valid email");
             return;
         }
-        
         setSending(true);
         axios.post('http://localhost:3002/sendOTP', { to: email, subject: "Verification code from HealthKard", otp: generateOtp() })
             .then((response) => {
                 setIsOtpSent(true);
                 toast.success("Otp sent successfully")
+                setSending(false);
             })
             .catch((error) => {
                 toast.error("error while sending otp");
+                setSending(false);
             });
-            setSending(false);
     }
     const verifyOTP = ()=>{
         setSending(true);
         if(userEnteredOtp === otp){
-            navigate('/hospitalRegister/hospitalDetails/');
             localStorage.setItem('hospital_id',generateUniqueId());
             localStorage.setItem('email',email);
+            navigate('/hospitalRegister/hospitalDetails/');
         }else{
             toast.error("Please re-enter correct otp");
         }
@@ -136,8 +139,10 @@ function SignUp() {
                 )}
                 {isOtpSent && (
                     <div className='flex gap-4 flex-col'>
-                        <div className=''>Enter OTP</div>
-                        <OTPInput value={userEnteredOtp} onChange={setUserEnteresOtp} autoFocus OTPLength={4} otpType="number" disabled={false} inputClassName='border-2 border-black rounded-md ' className='w-1/2 flex justify-between' />
+                        <div className=''>ENTER OTP</div>
+                        <div className='flex justify-center'>
+                            <OTPInput value={userEnteredOtp} onChange={setUserEnteresOtp} autoFocus OTPLength={4} otpType="number" disabled={false} inputClassName='border-2 border-black rounded-md ' className='w-1/2 flex justify-between' />
+                        </div>
                         <div className='flex gap-2 text-sm px-2 items-center'>Enter OTP received at <div className='font-bold'>{hideMiddleEmail(email)}</div><div onClick={()=>setIsOtpSent(false)} className='hover:bg-gray-400 hover:cursor-pointer p-2 rounded-full hover:text-white'><FaRegEdit  className=''/></div></div>
                         <div className='text-sm px-2 flex gap-2'>Didn't received? <div onClick={sendOTP} className='font-bold text-blue hover:cursor-pointer'>Resend</div></div>
                     </div>
@@ -149,7 +154,7 @@ function SignUp() {
                         size={20}
                         aria-label="Loading Spinner"
                         data-testid="loader"/>
-                    Send Otp
+                    SEND OTP
                 </button>}
                 {isOtpSent && <div onClick={verifyOTP} className='hover:cursor-pointer flex gap-2 items-center justify-center green text-white text-center rounded-md p-2'>
                     <ClipLoader

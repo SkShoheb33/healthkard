@@ -21,8 +21,14 @@ code {
 .green{
   background: #00BFA8;
 }
+.light-green{
+  background: #E5F7EF;
+}
 .blue{
   background: #303486 !important;
+}
+.red{
+  background: #BD3B3B;
 }
 .text-green{
   color: #00BFA8;

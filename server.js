@@ -28,7 +28,7 @@ app.post('/saveHospitalData', async (req, res) => {
     try {
         const hospitalData = req.body;
         await HospitalModel.create(hospitalData);
-        res.status(200).send('Hospital data saved successfully');s
+        res.status(200).send('Hospital data saved successfully');
     } catch (err) {
         console.error('Error saving hospital data:', err);
         res.status(500).send('Error saving hospital data');

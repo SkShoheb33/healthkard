@@ -12,6 +12,11 @@ import Login from './hospital/components/Login';
 import Dashboard from './hospital/components_dashboard/Dashboard';
 import Profile from './hospital/components_dashboard/Profile';
 import SuccessPopup from './hospital/components_register/SuccessPopup';
+import Techniqal from './techniqal/Techniqal';
+import Pending from './techniqal/components/Pending';
+import HospitalDetails from './techniqal/components/HospitalDetails';
+import DoctorDetails from './techniqal/components/DoctorDetails';
+import MediaDetails from './techniqal/components/MediaDetails';
 function App() {
   return (
     <BrowserRouter>
@@ -31,6 +36,13 @@ function App() {
           <Route path='doctorDetails' element={<Form2/>}></Route>
           <Route path='mediaDetails' element={<Form3/>}></Route>
           <Route path='success' element={<SuccessPopup/>}></Route>
+        </Route>
+        <Route path='/techniqal' element={<Techniqal/>}>
+          <Route path='pending' element={<Pending/>}>
+            <Route path='hospitalDetails' element={<HospitalDetails/>}></Route>
+            <Route path='doctorDetails' element={<DoctorDetails/>}></Route>
+            <Route path='mediaDetails' element={<MediaDetails/>}></Route>
+          </Route>
         </Route>
       </Routes>
     </BrowserRouter>
