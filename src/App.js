@@ -17,6 +17,8 @@ import Pending from './techniqal/components/Pending';
 import HospitalDetails from './techniqal/components/HospitalDetails';
 import DoctorDetails from './techniqal/components/DoctorDetails';
 import MediaDetails from './techniqal/components/MediaDetails';
+import EditHospitalDetails from './techniqal/components/EditHospitalDetails';
+import DenyHospital from './techniqal/components/DenyHospital';
 function App() {
   return (
     <BrowserRouter>
@@ -42,6 +44,8 @@ function App() {
             <Route path='hospitalDetails' element={<HospitalDetails/>}></Route>
             <Route path='doctorDetails' element={<DoctorDetails/>}></Route>
             <Route path='mediaDetails' element={<MediaDetails/>}></Route>
+            <Route path='edit' element={<EditHospitalDetails/>}></Route>
+            <Route path='deny' element={<DenyHospital/>}></Route>
           </Route>
         </Route>
       </Routes>

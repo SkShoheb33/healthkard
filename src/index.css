@@ -40,6 +40,10 @@ code {
   border:1px solid #303486;
 }
 
+.b-trans{
+  background:rgba(0, 0, 0, 0.5);
+}
+
 /* HTML: <div class="loader"></div> */
 .loader {
   width: 120px;

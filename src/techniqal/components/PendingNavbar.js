@@ -1,6 +1,6 @@
 import React from 'react'
 import './style.css'
-import {NavLink} from 'react-router-dom'
+import {Link, NavLink} from 'react-router-dom'
 function PendingNavbar() {
   return (
     <div className='w-full h-10 flex items-center '>
@@ -10,9 +10,9 @@ function PendingNavbar() {
             <NavLink to='mediaDetails' className=' p-1'>Media</NavLink>
         </div>
         <div className='flex items-center gap-2'>
-            <div className='red text-white px-3 py-1 hover:cursor-pointer '>Deny</div>
-            <div className='green text-white px-3 py-1 hover:cursor-pointer'>Approve</div>
-            <div className='blue text-white px-3 py-1 hover:cursor-pointer'>Edit</div>
+        <Link to='deny' className='green text-white px-3 py-1 hover:cursor-pointer'>Deny</Link>
+            <div className='red text-white px-3 py-1 hover:cursor-pointer '>Approve</div>
+            <Link to='edit' className='blue text-white px-3 py-1 hover:cursor-pointer'>Edit</Link>
         </div>
     </div>
   )
