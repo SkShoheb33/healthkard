@@ -1,4 +1,14 @@
-.active{
-    border-bottom: 3px solid #00BFA8;
+#pendingnavbarlinks a.active{
+    border-bottom: 3px solid #303486 ;
     border-left: none;
+    background: none;
+}
+#approivednavbarlinks a.active{
+    border-bottom: 3px solid #303486 ;
+    border-left: none;
+    background: none;
+}
+
+#technavbar a.active{
+    background: rgba(0, 0, 0, 0.5);
 }

@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
-import PendingNavbar from './PendingNavbar'
+import ApprovedNavbar from './ApprovedNavbar'
 import {Outlet} from 'react-router-dom'
 import Table from './Table'
-function Pending() {
+function Approved() {
     const data = [
         {health_id:'HK2420109101',name:'Shoheb Hospital'},
         {health_id:'HH2420109101',name:'Shoheb Hospital'},
@@ -47,11 +47,11 @@ function Pending() {
             <Table data={filteredData} dataOf={'Hospital'}/>
         </div>
         <div className='flex flex-col w-2/3 gap-10 '>
-            <PendingNavbar/>
+            <ApprovedNavbar/>
             <Outlet/>
         </div>
     </div>
   )
 }
 
-export default Pending
+export default Approved

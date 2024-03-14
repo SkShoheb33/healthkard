@@ -24,7 +24,7 @@ function ProgressBox() {
   }, [location.pathname]);
 
   return (
-    <div className='w-full md:w-2/3 flex flex-col gap-4 shadow-md rounded-md py-4 pb-6 h-fit'>
+    <div id='progressbox' className='w-full md:w-2/3 flex flex-col gap-4 shadow-md rounded-md py-4 pb-6 h-fit'>
       <div className='text-2xl font-semibold border-b-2 p-4'>Create your Hospital page</div>
       <NavLink to='/hospitalRegister/hospitalDetails' className='flex p-1 items-center justify-between hover:cursor-pointer' activeclassname='active-step'>
         <div className={`shadow-lg rounded-full border p-2 text-sm font-semibold w-[30px] h-[30px] flex justify-center items-center mx-auto ${activeStep === 1 ? 'green text-white' : ''}`}>1</div>

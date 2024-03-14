@@ -5,7 +5,7 @@ import { Outlet } from 'react-router-dom'
 function Techniqal() {
     
   return (
-    <div className='flex flex-col'>
+    <div className='flex flex-col '>
         <Navbar/>
         <Outlet/>
     </div>

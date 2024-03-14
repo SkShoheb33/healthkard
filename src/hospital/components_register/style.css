@@ -1,4 +1,3 @@
-.active{
-    border-left:#00BFA8 2px solid;
-    
+#progressbox a.active{
+    border-left:#00BFA8 2px solid !important;
 }

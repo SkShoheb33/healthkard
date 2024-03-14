@@ -1,11 +1,11 @@
 import React from 'react'
 import gif from '../../assets/datanotfound.gif'
-function Table({data}) {
+function Table({data,dataOf}) {
   return (
     <div className='relative flex flex-col h-[65vh] overflow-scroll'>
       <div className= 'sticky top-0 blue flex p-2 text-white rounded my-2'>
           <div className='w-1/2'>Health id</div>
-          <div className='w-1/2'>Hospital name</div>
+          <div className='w-1/2'>{dataOf} name</div>
       </div>
         {data.map((d,index)=>{
             return(

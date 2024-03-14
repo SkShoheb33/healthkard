@@ -19,6 +19,8 @@ import DoctorDetails from './techniqal/components/DoctorDetails';
 import MediaDetails from './techniqal/components/MediaDetails';
 import EditHospitalDetails from './techniqal/components/EditHospitalDetails';
 import DenyHospital from './techniqal/components/DenyHospital';
+import Approved from './techniqal/components/Approved';
+import UsersInfo from './techniqal/components/UsersInfo';
 function App() {
   return (
     <BrowserRouter>
@@ -47,6 +49,14 @@ function App() {
             <Route path='edit' element={<EditHospitalDetails/>}></Route>
             <Route path='deny' element={<DenyHospital/>}></Route>
           </Route>
+          <Route path='approved' element={<Approved/>}>
+            <Route path='hospitalDetails'  element={<HospitalDetails/>}></Route>
+            <Route path='doctorDetails' element={<DoctorDetails/>}></Route>
+            <Route path='mediaDetails' element={<MediaDetails/>}></Route>
+            <Route path='edit' element={<EditHospitalDetails/>}></Route>
+            <Route path='deny' element={<DenyHospital/>}></Route>
+          </Route>
+          <Route path='users' element={<UsersInfo/>}></Route>
         </Route>
       </Routes>
     </BrowserRouter>
