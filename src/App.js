@@ -21,6 +21,7 @@ import EditHospitalDetails from './techniqal/components/EditHospitalDetails';
 import DenyHospital from './techniqal/components/DenyHospital';
 import Approved from './techniqal/components/Approved';
 import UsersInfo from './techniqal/components/UsersInfo';
+import HospitalEditPersonal from './hospital/components_dashboard/HospitalEditPersonal'
 function App() {
   return (
     <BrowserRouter>
@@ -29,7 +30,12 @@ function App() {
         <Route path='/hospital' element={<HospitalDashboard/>}>
           <Route index path='dashboard' element={<Dashboard/>}></Route>
           <Route index path='' element={<Dashboard/>}></Route>
-          <Route path='profile' element={<Profile/>}></Route>
+          <Route path='profile' element={<Profile/>}>
+            <Route path='hospitalDetails' element={<HospitalDetails/>}></Route>
+            <Route path='doctorDetails' element={<DoctorDetails/>}></Route>
+            <Route path='mediaDetails' element={<MediaDetails/>}></Route>
+            <Route path='edit' element={<HospitalEditPersonal/>}></Route>
+          </Route>
         </Route>
         <Route path='/auth' element={<HospitalCredentails/>}>
           <Route path='signup' element={<SignUp/>}/>

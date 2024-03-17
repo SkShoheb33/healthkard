@@ -1,28 +1,12 @@
 import React,{useState} from 'react'
+import logo from '../../assets/logo.svg'
 import Table from '../components/Table';
 import UserInfo from '../components/UserInfo';
 import Graph from '../components/Graph';
 function Dashboard() {
     const columns = ['Health Id','Name','Gender','Age','phone Number'];
-    const data =[
-      {id:'HK240001',name:'Shaik Shoheb',gender:'Male',age:'20',phNumber:'9876543210'},
-      {id:'HK240002',name:'Shaik Shoheb',gender:'Male',age:'20',phNumber:'9876543210'},
-      {id:'HK240003',name:'Shaik Shoheb',gender:'Male',age:'20',phNumber:'9876543210'},
-      {id:'HK240004',name:'Shaik Shoheb',gender:'Male',age:'20',phNumber:'9876543210'},
-      {id:'HK240005',name:'Shaik Shoheb',gender:'Male',age:'20',phNumber:'9876543210'},
-      {id:'HK240004',name:'Shaik Shoheb',gender:'Male',age:'20',phNumber:'9876543210'},
-      {id:'HK240005',name:'Shaik Shoheb',gender:'Male',age:'20',phNumber:'9876543210'},
-      {id:'HK240004',name:'Shaik Shoheb',gender:'Male',age:'20',phNumber:'9876543210'},
-      {id:'HK240005',name:'Shaik Shoheb',gender:'Male',age:'20',phNumber:'9876543210'},
-      {id:'HK240004',name:'Shaik Shoheb',gender:'Male',age:'20',phNumber:'9876543210'},
-      {id:'HK240005',name:'Shaik Shoheb',gender:'Male',age:'20',phNumber:'9876543210'},
-      {id:'HK240004',name:'Shaik Shoheb',gender:'Male',age:'20',phNumber:'9876543210'},
-      {id:'HK240005',name:'Shaik Shoheb',gender:'Male',age:'20',phNumber:'9876543210'},
-      {id:'HK240004',name:'Shaik Shoheb',gender:'Male',age:'20',phNumber:'9876543210'},
-      {id:'HK240005',name:'Shaik Shoheb',gender:'Male',age:'20',phNumber:'9876543210'},
-      {id:'HK240004',name:'Shaik Shoheb',gender:'Male',age:'20',phNumber:'9876543210'},
-      {id:'HK240005',name:'Shaik Shoheb',gender:'Male',age:'20',phNumber:'9176543210'},
-    ]
+    const [user,setUser] = useState(null);
+    const data =[]
   const [records,setRecords] = useState(data);
   function handleFilter(event){
       const newData = data.filter(row=>{
@@ -48,7 +32,11 @@ function Dashboard() {
         <div className='flex w-full  h-full justify-between gap-2'>
             <Table data = {records} columns = {columns}/>
             <div className='hidden lg:flex flex-col w-2/5 gap-5  '>
-                <UserInfo/>
+                {user && <UserInfo/>}
+                {!user && <div className='flex flex-col items-center justify-center gap-2'> 
+                    <img src={logo} width='300px' alt='logo'/>
+                    <div className='text-2xl font-bold '>Health Kard</div>
+                </div>}
                 <Graph/>
             </div>
         </div>
