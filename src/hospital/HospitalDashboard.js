@@ -1,12 +1,17 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 
 import SideBar from './components/SideBar';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 import Navbar from './components/Navbar';
 
 
 function HospitalDashboard() {
-   
+  const navigate = useNavigate();
+   useEffect(()=>{
+      if(!localStorage.getItem('hospitalId')){
+        navigate('/auth');
+      }
+   },[]);
     
   return (
     <div className='bg-white flex flex-col-reverse lg:flex-row h-[100vh] w-[100vw] overflow-hidden'>

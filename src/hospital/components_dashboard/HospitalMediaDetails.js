@@ -1,10 +1,10 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
-import SplashScreen from '../../hospital/components_dashboard/SplashScreen';
+import SplashScreen from './SplashScreen';
 import {ref, deleteObject}  from 'firebase/storage'
 import { storage} from '../../firebase-config';
 import './style.css'
-function MediaDetails() {
+function HospitalMediaDetails() {
   const [data,setData] = useState({});
     const [loading,setLoading] = useState(true);
     useEffect(()=>{
@@ -74,4 +74,4 @@ function MediaDetails() {
   )
 }
 
-export default MediaDetails
+export default HospitalMediaDetails

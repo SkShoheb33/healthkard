@@ -36,7 +36,7 @@ app.post('/saveHospitalData', async (req, res) => {
 });
 
 
-
+// opt section
 app.post('/sendOTP', async (req, res) => {
     const { to, subject, otp } = req.body;
     try {
@@ -66,17 +66,121 @@ app.post('/sendOTP', async (req, res) => {
 });
 
 
+
+// checking for present or not
 app.get('/checkMail/:email', async (req, res) => {
     const email = req.params.email;
     try {
         const result = await HospitalModel.findOne({ email });
         if (result) {
-            res.status(200).json({ email: result.email, isverified: result.isverified });
+            res.status(200).json({ email: result.email, isverified: result.isverified ,hospitalId:result.hospitalId});
         } else {
             res.status(200).json({ email: "not found", isverified: "0" });
         }
     } catch (err) {
         console.error("Error while checking the email:", err);
         res.status(500).json({ error: "Internal Server Error" });
+    }
+});
+
+
+// getting hospital details by id
+app.get('/getHospitalDeatils/:hospitalId', async (req,res)=>{
+    const hospitalId = req.params.hospitalId;
+    try {
+        const result = await HospitalModel.findOne({ hospitalId });
+        if (result) {
+            res.status(200).json(result.hospitalDetails);
+        } else {
+            res.status(200).json({ email: "not found", isverified: "0" });
+        }
+    } catch (err) {
+        console.error("Error while checking the email:", err);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+})
+
+// getting hospital doctorDetails by id
+app.get('/getDoctorDetails/:hospitalId', async (req,res)=>{
+    const hospitalId = req.params.hospitalId;
+    try {
+        const result = await HospitalModel.findOne({ hospitalId });
+        if (result) {
+            res.status(200).json(result.doctorList);
+        } else {
+            res.status(200).json({ email: "not found", isverified: "0" });
+        }
+    } catch (err) {
+        console.error("Error while checking the email:", err);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+})
+
+// getting hospital media Details by id
+app.get('/getMediaDeatils/:hospitalId', async (req,res)=>{
+    const hospitalId = req.params.hospitalId;
+    try {
+        const result = await HospitalModel.findOne({ hospitalId });
+        if (result) {
+            res.status(200).json(result.mediaDetails);
+        } else {
+            res.status(200).json({ email: "not found", isverified: "0" });
+        }
+    } catch (err) {
+        console.error("Error while checking the email:", err);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+})
+// get name by id
+app.get('/getName/:hospitalId', async (req,res)=>{
+    const hospitalId = req.params.hospitalId;
+    try {
+        const result = await HospitalModel.findOne({ hospitalId });
+        if (result) {
+            res.status(200).send(result.hospitalDetails.hospitalLegalName);
+        } else {
+            res.status(200).json({ email: "not found", isverified: "0" });
+        }
+    } catch (err) {
+        console.error("Error while checking the email:", err);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+})
+
+
+app.put('/update/:hospitalId', async (req, res) => {
+    const hospitalId = req.params.hospitalId;
+    const updatedData = req.body;
+    console.log(Object.keys(updatedData));
+    try {
+        const result = await HospitalModel.findOneAndUpdate(
+            { hospitalId: hospitalId }, 
+            { $set: {hospitalDetails:updatedData.hospitalDetails,doctorList:updatedData.doctorList, updatedDate: new Date().toISOString() } },
+            { new: true } 
+        );        
+        if (!result) {  
+            return res.status(404).json({ message: "Hospital not found" });
+        }
+        res.status(200).json({ message: "Hospital updated successfully", data: result });
+    } catch (error) {
+        res.status(500).json({ message: "Error updating hospital", error: error.message });
+    }
+});
+app.put('/deleteMediaDetails/:hospitalId', async (req, res) => {
+    const hospitalId = req.params.hospitalId;
+    const updatedData = req.body;
+    console.log(updatedData);
+    try {
+        const result = await HospitalModel.findOneAndUpdate(
+            { hospitalId: hospitalId }, 
+            { $set: {mediaDetails:updatedData, updatedDate: new Date().toISOString() } },
+            { new: true } 
+        );        
+        if (!result) {  
+            return res.status(404).json({ message: "Hospital not found" });
+        }
+        res.status(200).json({ message: "Hospital updated successfully" });
+    } catch (error) {
+        res.status(500).json({ message: "Error updating hospital", error: error.message });
     }
 });

@@ -1,8 +1,14 @@
 const mongoose = require('mongoose');
 
 const HospitalSchema = new mongoose.Schema({
-    hospitalId: String,
-    email:String,
+    hospitalId: {
+        type:String,
+        unique:true,
+    },
+    email: {
+        type:String,
+        unique:true,
+    },
     isverified:{
         type: String,
         default: '0'
@@ -66,6 +72,10 @@ const HospitalSchema = new mongoose.Schema({
         hospitalImageURL: String,
         logoURL: String,
         videoURL: String
+    },
+    users:{
+        type: Array,
+        default:[]
     }
 });
 

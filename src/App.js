@@ -22,6 +22,10 @@ import DenyHospital from './techniqal/components/DenyHospital';
 import Approved from './techniqal/components/Approved';
 import UsersInfo from './techniqal/components/UsersInfo';
 import HospitalEditPersonal from './hospital/components_dashboard/HospitalEditPersonal'
+import HospitalHospitalDetails from './hospital/components_dashboard/HospitalHospitalDetails'
+import HospitailDoctorDetails from './hospital/components_dashboard/HospitailDoctorDetails'
+import HospitalMediaDetails from './hospital/components_dashboard/HospitalMediaDetails'
+import TechnicalLogin from './techniqal/credentails.js/TechnicalLogin';
 function App() {
   return (
     <BrowserRouter>
@@ -31,9 +35,9 @@ function App() {
           <Route index path='dashboard' element={<Dashboard/>}></Route>
           <Route index path='' element={<Dashboard/>}></Route>
           <Route path='profile' element={<Profile/>}>
-            <Route path='hospitalDetails' element={<HospitalDetails/>}></Route>
-            <Route path='doctorDetails' element={<DoctorDetails/>}></Route>
-            <Route path='mediaDetails' element={<MediaDetails/>}></Route>
+            <Route path='hospitalDetails' element={<HospitalHospitalDetails/>}></Route>
+            <Route path='doctorDetails' element={<HospitailDoctorDetails/>}></Route>
+            <Route path='mediaDetails' element={<HospitalMediaDetails/>}></Route>
             <Route path='edit' element={<HospitalEditPersonal/>}></Route>
           </Route>
         </Route>
@@ -48,6 +52,7 @@ function App() {
           <Route path='success' element={<SuccessPopup/>}></Route>
         </Route>
         <Route path='/techniqal' element={<Techniqal/>}>
+          <Route path='login' element={<TechnicalLogin/>}></Route>
           <Route path='pending' element={<Pending/>}>
             <Route path='hospitalDetails' element={<HospitalDetails/>}></Route>
             <Route path='doctorDetails' element={<DoctorDetails/>}></Route>

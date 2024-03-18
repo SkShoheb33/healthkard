@@ -1,8 +1,9 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import PendingNavbar from './PendingNavbar'
-import {Outlet} from 'react-router-dom'
+import {Outlet, useNavigate} from 'react-router-dom'
 import Table from './Table'
 function Pending() {
+    const navigate = useNavigate();
     const data = [
         {health_id:'HK2420109101',name:'Shoheb Hospital'},
         {health_id:'HH2420109101',name:'Shoheb Hospital'},
@@ -21,6 +22,9 @@ function Pending() {
         {health_id:'HH2420109101',name:'Shoheb Hospital'},
         {health_id:'HH2420109101',name:'Shoheb Hospital'}
     ]
+    useEffect(()=>{
+        navigate('hospitalDetails');
+    },[]);
     const [filteredData,setFilteredData] = useState(data);
     // functions
     const filter = (term)=>{

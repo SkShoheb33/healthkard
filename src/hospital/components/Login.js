@@ -27,7 +27,7 @@ function Login() {
     const isAlreadyPresentInDatabase = async (email) => {
         try {
             const response = await axios.get(`http://localhost:3002/checkMail/${email}`);
-            console.log(response.data.isverified === "1");
+            localStorage.setItem('hospitalId',response.data.hospitalId);
             return response.data.isverified === "1";
         } catch (error) {
             console.error("Error checking email in database:", error);

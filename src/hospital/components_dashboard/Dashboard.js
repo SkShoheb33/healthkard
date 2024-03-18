@@ -33,9 +33,9 @@ function Dashboard() {
             <Table data = {records} columns = {columns}/>
             <div className='hidden lg:flex flex-col w-2/5 gap-5  '>
                 {user && <UserInfo/>}
-                {!user && <div className='flex flex-col items-center justify-center gap-2'> 
-                    <img src={logo} width='300px' alt='logo'/>
-                    <div className='text-2xl font-bold '>Health Kard</div>
+                {!user && <div className='flex flex-col items-center justify-center'> 
+                    <img src={logo} width='200px' alt='logo'/>
+                    <div className='text-2xl font-bold text-green '>Health Kard</div>
                 </div>}
                 <Graph/>
             </div>

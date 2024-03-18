@@ -1,3 +1,7 @@
-#pendingnavbarlinks a.active{
-    
+.img .btn{
+    display: none;
+}
+
+.img:hover .btn{
+    display: flex;
 }
