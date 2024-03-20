@@ -58,6 +58,7 @@ function SignUp() {
         if(sending){
             return;
         }
+        setSending(true);
         const isPresent = await isAlreadyPresentInDatabase(email);
         if(isPresent){
             toast.error("Email already exist.")
@@ -81,7 +82,6 @@ function SignUp() {
             toast.error("Please enter valid email");
             return;
         }
-        setSending(true);
         axios.post(`${serverURL}/sendOTP`, { to: email, subject: "Verification code from HealthKard", otp: generateOtp() })
             .then((response) => {
                 setIsOtpSent(true);

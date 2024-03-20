@@ -16,7 +16,6 @@ function Login() {
     const [emailError,setEmailError] = useState(false);
     const [userEnteredOtp,setUserEnteresOtp] = useState(null);
     const [sending,setSending] = useState(false);
-    // const serverURL = 'http://localhost:3002'
     const generateOtp = () => {
         let digits = '0123456789';
         let OTP = '';
@@ -37,6 +36,8 @@ function Login() {
         }
     };
     const sendOTP = async() => {
+        if(sending)return;
+        setSending(true);
         const isPresent = await isAlreadyPresentInDatabase(email);
         console.log(isPresent,email);
         if(!isPresent){
@@ -48,14 +49,14 @@ function Login() {
             setEmailError(true);
             return;
         }
-        setSending(true);
+        
         axios.post(`${serverURL}/sendOTP`, { to: email, subject: "Verification code from HealthKard login", otp: generateOtp() })
             .then((response) => {
                 setIsOtpSent(true);
                 setSending(false);
             })
             .catch((error) => {
-                console.error("Error sending OTP:", error);
+                setSending(false);
             });
     }
     const verifyOTP = ()=>{
@@ -65,11 +66,11 @@ function Login() {
         if(userEnteredOtp === otp){
             toast.success("Logged in successfully");
             navigate('/hospital/dashboard/')
+            setSending(false);
         }else{
             toast.error("Please enter correct otp!");
             console.log("Wrong otp entered");
         }
-        setSending(false);
     }
   return (
     <div div className='bg-[rgba(0,0,0,0.5)] relative h-[100vh] w-full flex justify-center items-center'>
