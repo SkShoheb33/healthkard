@@ -9,7 +9,7 @@ function Techniqal() {
       if(!techniqal){
         navigate('login');
       }else{
-        navigate('pending');
+        // navigate('pending');
       }
     },[]);
   return (

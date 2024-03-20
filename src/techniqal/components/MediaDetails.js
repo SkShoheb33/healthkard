@@ -5,27 +5,31 @@ import {ref, deleteObject}  from 'firebase/storage'
 import { storage} from '../../firebase-config';
 import serverURL from '../../server-config'
 import './style.css'
+import { useParams } from 'react-router-dom';
 function MediaDetails() {
+  const [loading,setLoading] = useState(true);
+  const {hospitalId} = useParams();
   const [data,setData] = useState({});
-    const [loading,setLoading] = useState(true);
-    const hospitalId = localStorage.getItem('hospitalId');
-    useEffect(()=>{
-        setLoading(true);   
-        let fetchDetails = async()=>{
-            let hospitalId = localStorage.getItem('hospitalId');
-            const response = await axios.get(`${serverURL}/getMediaDeatils/${hospitalId}`);
-            setData(response.data);
-            setLoading(false);
-        }
-        fetchDetails();
-    },[]);
+  useEffect(() => {
+      const fetchData = async () => {
+          try {
+              const response = await axios.get(`${serverURL}/getMediaDeatils/${hospitalId}`);
+              setData(response.data);
+              setLoading(false)
+              console.log(response.data);
+          } catch (error) {
+              console.error('Error fetching hospital data:', error);
+          }
+      };
+
+      fetchData();
+  }, [hospitalId]);
     const deleteFile = async (filePath, index) => {
         try {
             const fileRef = ref(storage, filePath);
             
             // Delete the file
             await deleteObject(fileRef);
-            console.log("Successfully deleted");
             await axios.put(`${serverURL}/deleteMediaDetails/${hospitalId}`, {...data,[index]:""}).then((result) => {
             setData(prevData => {
               const updatedData = { ...prevData };

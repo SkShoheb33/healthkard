@@ -3,24 +3,7 @@ import Table from './Table'
 import UserInfo from '../../techniqal/components/UserInfo';
 import UserInfoTable from './UserInfoTable';
 function UsersInfo() {
-    const data = [
-        {health_id:'HK2420109101',name:'Shoheb Hospital'},
-        {health_id:'HH2420109101',name:'Shoheb Hospital'},
-        {health_id:'HH2420109101',name:'Shoheb Hospital'},
-        {health_id:'HH2420109101',name:'Shoheb Hospital'},
-        {health_id:'HH2420109101',name:'Shoheb Hospital'},
-        {health_id:'HH2420109101',name:'Shoheb Hospital'},
-        {health_id:'HH2420109101',name:'Shoheb Hospital'},
-        {health_id:'HH2420109101',name:'Shoheb Hospital'},
-        {health_id:'HH2420109101',name:'Shoheb Hospital'},
-        {health_id:'HH2420109101',name:'Shoheb Hospital'},
-        {health_id:'HH2420109101',name:'Shoheb Hospital'},
-        {health_id:'HH2420109101',name:'Shoheb Hospital'},
-        {health_id:'HH2420109101',name:'Shoheb Hospital'},
-        {health_id:'HH2420109101',name:'Shoheb Hospital'},
-        {health_id:'HH2420109101',name:'Shoheb Hospital'},
-        {health_id:'HH2420109101',name:'Shoheb Hospital'}
-    ]
+    const data = []
     const [filteredData,setFilteredData] = useState(data);
     // functions
     const filter = (term)=>{

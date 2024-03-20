@@ -12,3 +12,9 @@
 #technavbar a.active{
     background: rgba(0, 0, 0, 0.5);
 }
+
+#table a.active{
+    background-color: #00BFA8;
+    font-weight: bold;
+    color: white;
+}

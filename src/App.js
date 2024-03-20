@@ -26,6 +26,7 @@ import HospitalHospitalDetails from './hospital/components_dashboard/HospitalHos
 import HospitailDoctorDetails from './hospital/components_dashboard/HospitailDoctorDetails'
 import HospitalMediaDetails from './hospital/components_dashboard/HospitalMediaDetails'
 import TechnicalLogin from './techniqal/credentails.js/TechnicalLogin';
+import DeleteHospital from './techniqal/components/DeleteHospital';
 function App() {
   return (
     <BrowserRouter>
@@ -54,18 +55,18 @@ function App() {
         <Route path='/techniqal' element={<Techniqal/>}>
           <Route path='login' element={<TechnicalLogin/>}></Route>
           <Route path='pending' element={<Pending/>}>
-            <Route path='hospitalDetails' element={<HospitalDetails/>}></Route>
-            <Route path='doctorDetails' element={<DoctorDetails/>}></Route>
-            <Route path='mediaDetails' element={<MediaDetails/>}></Route>
-            <Route path='edit' element={<EditHospitalDetails/>}></Route>
+            <Route path='hospitalDetails/:hospitalId' element={<HospitalDetails/>}></Route>
+            <Route path='doctorDetails/:hospitalId' element={<DoctorDetails/>}></Route>
+            <Route path='mediaDetails/:hospitalId' element={<MediaDetails/>}></Route>
+            <Route path='edit/:hospitalId' element={<EditHospitalDetails/>}></Route>
             <Route path='deny' element={<DenyHospital/>}></Route>
           </Route>
           <Route path='approved' element={<Approved/>}>
-            <Route path='hospitalDetails'  element={<HospitalDetails/>}></Route>
-            <Route path='doctorDetails' element={<DoctorDetails/>}></Route>
-            <Route path='mediaDetails' element={<MediaDetails/>}></Route>
-            <Route path='edit' element={<EditHospitalDetails/>}></Route>
-            <Route path='deny' element={<DenyHospital/>}></Route>
+            <Route path='hospitalDetails/:hospitalId'  element={<HospitalDetails/>}></Route>
+            <Route path='doctorDetails/:hospitalId' element={<DoctorDetails/>}></Route>
+            <Route path='mediaDetails/:hospitalId' element={<MediaDetails/>}></Route>
+            <Route path='edit/:hospitalId' element={<EditHospitalDetails/>}></Route>
+            <Route path='deleteHospital/:hospitalId' element={<DeleteHospital/>}></Route>
           </Route>
           <Route path='users' element={<UsersInfo/>}></Route>
         </Route>

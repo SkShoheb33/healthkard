@@ -1,42 +1,37 @@
 import React, { useEffect, useState } from 'react'
-import ApprovedNavbar from './ApprovedNavbar'
-import {Outlet, useNavigate} from 'react-router-dom'
+import ApproivedNavbar from './ApprovedNavbar'
+import {Outlet, useParams} from 'react-router-dom'
 import Table from './Table'
+import serverURL from '../../server-config'
+import axios from 'axios';
 function Approved() {
-    const navigate = useNavigate();
-    const data = [
-        {health_id:'HK2420109101',name:'Shoheb Hospital'},
-        {health_id:'HH2420109101',name:'Shoheb Hospital'},
-        {health_id:'HH2420109101',name:'Shoheb Hospital'},
-        {health_id:'HH2420109101',name:'Shoheb Hospital'},
-        {health_id:'HH2420109101',name:'Shoheb Hospital'},
-        {health_id:'HH2420109101',name:'Shoheb Hospital'},
-        {health_id:'HH2420109101',name:'Shoheb Hospital'},
-        {health_id:'HH2420109101',name:'Shoheb Hospital'},
-        {health_id:'HH2420109101',name:'Shoheb Hospital'},
-        {health_id:'HH2420109101',name:'Shoheb Hospital'},
-        {health_id:'HH2420109101',name:'Shoheb Hospital'},
-        {health_id:'HH2420109101',name:'Shoheb Hospital'},
-        {health_id:'HH2420109101',name:'Shoheb Hospital'},
-        {health_id:'HH2420109101',name:'Shoheb Hospital'},
-        {health_id:'HH2420109101',name:'Shoheb Hospital'},
-        {health_id:'HH2420109101',name:'Shoheb Hospital'}
-    ]
-    useEffect(()=>{
-        navigate('hospitalDetails');
-    },[]);
+    let [data,setData] = useState([]);
+    const {hospitalId} = useParams();
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await axios.get(`${serverURL}/approvedHospitals`);
+                setData(response.data); 
+                setFilteredData(response.data);
+            } catch (error) {
+                console.error('Error fetching hospital data:', error);
+            }
+        };
+
+        fetchData();
+    }, []);
     const [filteredData,setFilteredData] = useState(data);
     // functions
     const filter = (term)=>{
         const newData = data.filter(row=>{
-            return (row.health_id.toLowerCase().includes(term.toLowerCase())||
-            row.name.toLowerCase().includes(term.toLowerCase()));
+            return (row.hospitalId.toLowerCase().includes(term.toLowerCase())||
+            row.hospitalDetails.hospitalLegalName.toLowerCase().includes(term.toLowerCase()));
         })
         setFilteredData(newData);
     }
   return (
-    <div className='flex p-4 gap-12 justify-center'>
-        <div className='flex flex-col w-1/4  gap-5'>
+    <div className='flex p-4 gap-12 justify-center relative'>
+        <div className={`flex flex-col gap-5 ${hospitalId?'w-1/4':'w-full'}`}>
             <div className='flex lg:text-xl gap-10'>
                 <div className='flex flex-col w-1/2 p-4 border-gray-100 rounded-xl border shadow-xl'>
                     <div className='font-semibold'>Total Users</div>
@@ -47,13 +42,15 @@ function Approved() {
                     <div className='text-green font-bold'>100</div>
                 </div>
             </div>
-            <input type='search' onChange={(e)=>filter(e.target.value)}  placeholder='Search with HealthKard ID or Hospital Name' className='border border-gray-100 shadow-lg w-full p-2 rounded-md'/>
-            <Table data={filteredData} dataOf={'Hospital'}/>
+            <div className='gap-5 flex flex-col'>
+                <input type='search' onChange={(e)=>filter(e.target.value)}  placeholder='Search with HealthKard ID or Hospital Name' className='border border-gray-100 shadow-lg w-full p-2 rounded-md'/>
+                {data.length !== 0 && <Table data={filteredData} dataOf={'Hospital'}/>}
+            </div>
         </div>
-        <div className='flex flex-col w-2/3 gap-10 '>
-            <ApprovedNavbar/>
+        {hospitalId && <div className='flex flex-col w-2/3 gap-10 '>
+            <ApproivedNavbar/>
             <Outlet/>
-        </div>
+        </div>}
     </div>
   )
 }

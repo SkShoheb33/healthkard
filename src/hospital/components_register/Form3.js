@@ -43,9 +43,11 @@ function Form3() {
                         if(index!==4)
                             setMediaDetails({ ...mediaDetails, [field + 'URL']: imageUrl });
                         else{
-                            let temp = mediaDetails.achivements;
-                            temp.push(imageUrl);
-                            setMediaDetails({...mediaDetails,achivements:temp});
+                            const tempAchivements = [...mediaDetails.achivements, imageUrl]; 
+                            setMediaDetails(prevMediaDetails => ({
+                            ...prevMediaDetails,
+                            achivements: tempAchivements
+                            }));
                         }
                         setProgress(0);
                     });

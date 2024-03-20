@@ -155,7 +155,7 @@ app.get('/getName/:hospitalId', async (req,res)=>{
 app.put('/update/:hospitalId', async (req, res) => {
     const hospitalId = req.params.hospitalId;
     const updatedData = req.body;
-    console.log(Object.keys(updatedData));
+    console.log(hospitalId)
     try {
         const result = await HospitalModel.findOneAndUpdate(
             { hospitalId: hospitalId }, 
@@ -173,7 +173,6 @@ app.put('/update/:hospitalId', async (req, res) => {
 app.put('/deleteMediaDetails/:hospitalId', async (req, res) => {
     const hospitalId = req.params.hospitalId;
     const updatedData = req.body;
-    console.log(updatedData);
     try {
         const result = await HospitalModel.findOneAndUpdate(
             { hospitalId: hospitalId }, 
@@ -186,5 +185,56 @@ app.put('/deleteMediaDetails/:hospitalId', async (req, res) => {
         res.status(200).json({ message: "Hospital updated successfully" });
     } catch (error) {
         res.status(500).json({ message: "Error updating hospital", error: error.message });
+    }
+});
+
+
+
+
+
+// techniqal routes
+// Route to get hospital IDs and names for verified hospitals for pending
+app.get('/verifiedHospitals', async (req, res) => {
+    try {
+        const verifiedHospitals = await HospitalModel.find(
+            { isverified: '1' }, // Query condition
+            { _id: 0, hospitalId: 1, 'hospitalDetails.hospitalLegalName': 1 } // Projection
+        );
+        res.status(200).json(verifiedHospitals);
+    } catch (error) {
+        console.error('Error retrieving verified hospitals:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+// Route to get hospital IDs and names for verified hospitals for approved
+app.get('/approvedHospitals', async (req, res) => {
+    try {
+        const verifiedHospitals = await HospitalModel.find(
+            { isverified: '2' }, // Query condition
+            { _id: 0, hospitalId: 1, 'hospitalDetails.hospitalLegalName': 1 } // Projection
+        );
+        res.status(200).json(verifiedHospitals);
+    } catch (error) {
+        console.error('Error retrieving verified hospitals:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+
+// update the isverified to 2
+app.put('/updateIsVerified/:hospitalId', async (req, res) => {
+    const hospitalId = req.params.hospitalId;
+    try {
+        const updatedHospital = await HospitalModel.findOneAndUpdate(
+            { hospitalId: hospitalId }, 
+            { isverified: '2' }, 
+            { new: true } 
+        );
+        if (!updatedHospital) {
+            return res.status(404).json({ message: "Hospital not found" });
+        }
+        res.status(200).json({ message: "Hospital isverified updated successfully" });
+    } catch (error) {
+        res.status(500).json({ message: "Error updating hospital isverified", error: error.message });
     }
 });

@@ -12,7 +12,7 @@ function SideBar() {
   }
   return (
     <div className='fixed lg:relative bottom-0 left-0 w-full lg:w-fit flex lg:flex-col  lg:h-full green lg:p-2 p-1 text-3xl text-white gap-6 justify-around lg:justify-between items-center'>
-        <div className='flex lg:flex-col w-2/3 lg:w-full lg:h-1/2 justify-around lg:justify-end lg:gap-4'>
+        <div id='sidebar' className='flex lg:flex-col w-2/3 lg:w-full lg:h-1/2 justify-around lg:justify-end lg:gap-4'>
           <NavLink to='profile' className=' p-2  rounded-md flex flex-col items-center w-1/2 lg:w-full lg:gap-1 hover:cursor-pointer'>
               <CgProfile/>
               <div className='text-xs lg:text-sm font-thin'>Profile</div>
