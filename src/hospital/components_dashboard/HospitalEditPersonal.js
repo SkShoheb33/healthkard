@@ -3,17 +3,18 @@ import React, { useEffect, useState } from 'react'
 import { RxCross1 } from "react-icons/rx";
 import { Link,useNavigate } from 'react-router-dom';
 import SplashScreen from './SplashScreen'
+import serverURL from '../../server-config'
 function HospitalEditPersonal() {
     const [data,setData] = useState({});
     const [loading,setLoading] = useState(false);
     const navigate = useNavigate();
-
+    // const serverURL = 'http://localhost:3002';
     useEffect(()=>{
         const hospitalId = localStorage.getItem('hospitalId');
         setLoading(true)
         let fetchData = async()=>{
-            const response1 = await axios.get(`http://localhost:3002/getHospitalDeatils/${hospitalId}`);
-            const response2 = await axios.get(`http://localhost:3002/getDoctorDetails/${hospitalId}`);
+            const response1 = await axios.get(`${serverURL}/getHospitalDeatils/${hospitalId}`);
+            const response2 = await axios.get(`${serverURL}/getDoctorDetails/${hospitalId}`);
             setData({hospitalDetails:response1.data,doctorList:response2.data});
             setLoading(false);
         }
@@ -23,7 +24,7 @@ function HospitalEditPersonal() {
     const save = async () => {
         try {
             const hospitalId = localStorage.getItem('hospitalId');
-            const response = await axios.put(`http://localhost:3002/update/${hospitalId}`, data);
+            await axios.put(`${serverURL}/update/${hospitalId}`, data);
             navigate('../hospitalDetails'); 
         } catch (error) {
             console.error("Error updating hospital:", error);

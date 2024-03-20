@@ -3,6 +3,7 @@ import Navbar from './components_register/Navbar';
 import ProgressBox from './components_register/ProgressBox';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import serverURL from '../server-config'
 import { ToastContainer, toast,Bounce } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 function HospitalRegister() {
@@ -10,6 +11,7 @@ function HospitalRegister() {
   const navigate = useNavigate();
   const [prevBtn, setPrevBtn] = useState(false);
   const [nextBtn, setNextBtn] = useState(true);
+  // const serverURL = 'http://localhost:3002';
   useEffect(()=>{
     let storedEmail = localStorage.getItem('email');
     if(!storedEmail){
@@ -124,7 +126,7 @@ function HospitalRegister() {
         }
         if(storedMediaDetails.desc && storedMediaDetails.hospitalImageURL
           && storedMediaDetails.logoURL ){
-              axios.post('http://localhost:3002/saveHospitalData',{
+              axios.post(`${serverURL}/saveHospitalData`,{
                 hospitalId:localStorage.getItem('hospital_id'),
                 email:localStorage.getItem('email'),
                 isverified:'1',

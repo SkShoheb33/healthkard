@@ -1,4 +1,5 @@
 import axios from 'axios';
+import serverURL from '../../server-config'
 import React, { useEffect, useState } from 'react'
 import { CgProfile } from "react-icons/cg";
 function Navbar() {
@@ -6,10 +7,11 @@ function Navbar() {
     hospitalName :'',
     hospitalId : ''
   })
+  // const serverURL = 'http://localhost:3002';
   useEffect(()=>{
     const hospitalId = localStorage.getItem('hospitalId');
     let fetchDetails = async()=>{
-      const response = await axios.get(`http://localhost:3002/getName/${hospitalId}`);
+      const response = await axios.get(`${serverURL}/getName/${hospitalId}`);
       setData({hospitalId: localStorage.getItem('hospitalId'),hospitalName:response.data});
     }
     fetchDetails();

@@ -7,7 +7,6 @@ function HospitalCredentails() {
   const navigate =  useNavigate();
   useEffect(()=>{
     let storedEmail = JSON.stringify(localStorage.getItem('email'));
-    console.log(storedEmail,storedEmail===null)
     if(storedEmail===null){
       navigate('/hospitalRegister/hospitalDetails/');
     }

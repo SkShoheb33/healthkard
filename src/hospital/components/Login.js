@@ -7,6 +7,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import OTPInput from "otp-input-react";
 import ClipLoader from "react-spinners/ClipLoader";
 import axios from 'axios'
+import serverURL from '../../server-config'
 function Login() {
     const navigate = useNavigate();
     const [otp, setOtp] = useState("");
@@ -15,6 +16,7 @@ function Login() {
     const [emailError,setEmailError] = useState(false);
     const [userEnteredOtp,setUserEnteresOtp] = useState(null);
     const [sending,setSending] = useState(false);
+    // const serverURL = 'http://localhost:3002'
     const generateOtp = () => {
         let digits = '0123456789';
         let OTP = '';
@@ -26,7 +28,7 @@ function Login() {
     }
     const isAlreadyPresentInDatabase = async (email) => {
         try {
-            const response = await axios.get(`http://localhost:3002/checkMail/${email}`);
+            const response = await axios.get(`${serverURL}/checkMail/${email}`);
             localStorage.setItem('hospitalId',response.data.hospitalId);
             return response.data.isverified === "1";
         } catch (error) {
@@ -36,6 +38,7 @@ function Login() {
     };
     const sendOTP = async() => {
         const isPresent = await isAlreadyPresentInDatabase(email);
+        console.log(isPresent,email);
         if(!isPresent){
             toast.error("email doesn't exist.")
             navigate('../signup')
@@ -46,7 +49,7 @@ function Login() {
             return;
         }
         setSending(true);
-        axios.post('http://localhost:3002/sendOTP', { to: email, subject: "Verification code from HealthKard login", otp: generateOtp() })
+        axios.post(`${serverURL}/sendOTP`, { to: email, subject: "Verification code from HealthKard login", otp: generateOtp() })
             .then((response) => {
                 setIsOtpSent(true);
                 setSending(false);

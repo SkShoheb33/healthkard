@@ -1,4 +1,5 @@
 import axios from 'axios';
+import serverURL from '../../server-config'
 import React, { useEffect, useState } from 'react'
 import SplashScreen from './SplashScreen';
 import {ref, deleteObject}  from 'firebase/storage'
@@ -7,11 +8,12 @@ import './style.css'
 function HospitalMediaDetails() {
   const [data,setData] = useState({});
     const [loading,setLoading] = useState(true);
+    // const serverURL = 'http://localhost:3002';
     useEffect(()=>{
         const hospitalId = localStorage.getItem('hospitalId');
         setLoading(true);   
         let fetchDetails = async()=>{
-            const response = await axios.get(`http://localhost:3002/getMediaDeatils/${hospitalId}`);
+            const response = await axios.get(`${serverURL}/getMediaDeatils/${hospitalId}`);
             setData(response.data);
             setLoading(false);
         }
@@ -24,7 +26,7 @@ function HospitalMediaDetails() {
             // Delete the file
             await deleteObject(fileRef);
             console.log("Successfully deleted");
-            await axios.put(`http://localhost:3002/deleteMediaDetails/${localStorage.getItem('hospitalId')}`, {...data,[index]:""}).then((result) => {
+            await axios.put(`${serverURL}/deleteMediaDetails/${localStorage.getItem('hospitalId')}`, {...data,[index]:""}).then((result) => {
             setData(prevData => {
               const updatedData = { ...prevData };
               updatedData[index] = "";
@@ -61,10 +63,6 @@ function HospitalMediaDetails() {
                     <div onClick={()=>deleteFile(data.doctorImageURL,'doctorImageURL')} className=' text-white red p-2 rounded-md font-bold hover:cursor-pointer'>Delete</div>
                   </div>
                 </div>}
-                {data.videoURL && <div className=''>
-                  <video className='w-full' src={data.videoURL} controls/>
-                </div>}
-                <div className=''></div>
             </div>
         </div>
         )

@@ -70,8 +70,7 @@ const HospitalSchema = new mongoose.Schema({
         desc: String,
         doctorImageURL: String,
         hospitalImageURL: String,
-        logoURL: String,
-        videoURL: String
+        logoURL: String
     },
     users:{
         type: Array,

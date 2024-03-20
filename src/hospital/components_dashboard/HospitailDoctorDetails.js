@@ -1,4 +1,5 @@
 import axios from 'axios';
+import serverURL from '../../server-config'
 import React, { useEffect, useState } from 'react'
 import SplashScreen from './SplashScreen';
 
@@ -40,11 +41,12 @@ function HospitailDoctorDetails() {
     //   ];
   const [data,setData] = useState([]);
   const [loading,setLoading] = useState(true);
+//   const serverURL = 'http://localhost:3002'
   useEffect(()=>{
     setLoading(true);
     const hospitalId = localStorage.getItem('hospitalId');
     let fetchData = async()=>{
-      const response = await axios.get(`http://localhost:3002/getDoctorDetails/${hospitalId}`);
+      const response = await axios.get(`${serverURL}/getDoctorDetails/${hospitalId}`);
       setData(response.data);
       setLoading(false);
     }

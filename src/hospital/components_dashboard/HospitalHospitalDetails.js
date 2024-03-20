@@ -1,15 +1,17 @@
 import axios from 'axios';
+import serverURL from '../../server-config'
 import React, { useEffect, useState } from 'react'
 import SplashScreen from './SplashScreen';
 
 function HospitalHospitalDetails() {
     const [data,setData] = useState({});
     const [loading,setLoading] = useState(true);
+    // const serverURL = 'http://localhost:3002';
     useEffect(()=>{
         const hospitalId = localStorage.getItem('hospitalId');
         let fetchDetails = async()=>{
             setLoading(true);   
-            const response = await axios.get(`http://localhost:3002/getHospitalDeatils/${hospitalId}`);
+            const response = await axios.get(`${serverURL}/getHospitalDeatils/${hospitalId}`);
             setData(response.data);
             setLoading(false);
         }

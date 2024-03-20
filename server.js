@@ -40,13 +40,17 @@ app.post('/saveHospitalData', async (req, res) => {
 app.post('/sendOTP', async (req, res) => {
     const { to, subject, otp } = req.body;
     try {
+        
         let transporter = nodemailer.createTransport({
             host: "smtp.gmail.com",
             port: 587,
             secure: false,
             auth: {
-                user: "shaikshoheb9k@gmail.com", // shaikshoheb01112001 Gmail address
-                pass: "zalc kkbp omun rkes" // shaikshoheb01112001 Gmail password
+                user: "shaikshoheb9k@gmail.com",
+                pass: "zalc kkbp omun rkes"
+            },
+            tls: {
+                rejectUnauthorized: false
             }
         });
 

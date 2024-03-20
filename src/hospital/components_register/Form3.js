@@ -9,7 +9,6 @@ function Form3() {
         return storedMediaDetails ? JSON.parse(storedMediaDetails) : {
             logoURL:"",
             hospitalImageURL:"",
-            videoURL:"",
             doctorImageURL:"",
             achivements:[],
             desc:""
@@ -106,11 +105,6 @@ function Form3() {
                     <div>{images[1]}</div>
                     <RxCross2 onClick={()=>deleteFile(mediaDetails.hospitalImageURL,"hospitalImageURL",1)} className='hover:text-red-500 hover:cursor-pointer'/>
                 </div>}
-                <div className='text-gray-400 text-center mt-4 text-xl'>Hospital video will autoplay in the banner (Optional)</div>
-                <label id="videoBtn" htmlFor="video" className="hover:cursor-pointer blue text-white h-10 flex justify-center items-center rounded-md">
-                    <span>Upload Video</span>
-                    <input type="file" id="video" className="hidden" onChange={(e) => uploadImage(e.target.files[0], 'video',2)}  accept="video/*"/>
-                </label>
                 {images[2] && <div className='flex gap-2 items-center bg-gray-200 w-fit p-1 rounded-md '>
                     <div>{images[2]}</div>
                     <RxCross2 onClick={()=>deleteFile(mediaDetails.videoURL,"videoURL",2)} className='hover:text-red-500 hover:cursor-pointer'/>

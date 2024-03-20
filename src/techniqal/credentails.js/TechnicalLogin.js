@@ -4,6 +4,7 @@ import ClipLoader from "react-spinners/ClipLoader";
 import { ToastContainer, toast } from 'react-toastify';
 import OTPInput from "otp-input-react";
 import { useNavigate } from 'react-router-dom';
+import serverURL from '../../server-config'
 function TechnicalLogin() {
     const navigate = useNavigate();
     const [otp,setOtp] = useState(null);
@@ -12,6 +13,7 @@ function TechnicalLogin() {
     const [email,setEmail] = useState('');
     const [password,setPassword] = useState('');
     const [userEnteredOtp,setUserEnteresOtp] = useState(null);
+    // const serverURL = 'http://localhost:3002';
     const generateOtp = () => {
         let digits = '0123456789';
         let OTP = '';
@@ -32,7 +34,7 @@ function TechnicalLogin() {
             return;
         }
         setSending(true);
-        axios.post('http://localhost:3002/sendOTP', { to: email, subject: "Verification code from HealthKard Admin", otp: generateOtp() })
+        axios.post(`${serverURL}/sendOTP`, { to: email, subject: "Verification code from HealthKard Admin", otp: generateOtp() })
             .then((response) => {
                 setIsOtpSent(true);
                 setSending(false);

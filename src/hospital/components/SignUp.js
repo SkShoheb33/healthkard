@@ -6,6 +6,7 @@ import OTPInput from "otp-input-react";
 import ClipLoader from "react-spinners/ClipLoader";
 import { ToastContainer, toast } from 'react-toastify';
 import axios from 'axios';
+import serverURL from '../../server-config'
 import { FaRegEdit } from "react-icons/fa";
 
 // import crypto from 'crypto';
@@ -20,6 +21,7 @@ function SignUp() {
     const [userEnteredOtp,setUserEnteresOtp] = useState(null);
     const [sending,setSending] = useState(false);
     const [isCheckBoxChecked,setIsCheckBoxChecked] = useState(false);
+    // const serverURL = 'http://localhost:3002'
     const generateOtp = () => {
         let digits = '0123456789';
         let OTP = '';
@@ -43,7 +45,7 @@ function SignUp() {
     }
     const isAlreadyPresentInDatabase = async (email) => {
         try {
-            const response = await axios.get(`http://localhost:3002/checkMail/${email}`);
+            const response = await axios.get(`${serverURL}/checkMail/${email}`);
             console.log(response.data.isverified === "1");
             return response.data.isverified === "1";
         } catch (error) {
@@ -80,7 +82,7 @@ function SignUp() {
             return;
         }
         setSending(true);
-        axios.post('http://localhost:3002/sendOTP', { to: email, subject: "Verification code from HealthKard", otp: generateOtp() })
+        axios.post(`${serverURL}/sendOTP`, { to: email, subject: "Verification code from HealthKard", otp: generateOtp() })
             .then((response) => {
                 setIsOtpSent(true);
                 toast.success("Otp sent successfully")

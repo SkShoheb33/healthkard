@@ -3,15 +3,17 @@ import React, { useEffect, useState } from 'react'
 import SplashScreen from '../../hospital/components_dashboard/SplashScreen';
 import {ref, deleteObject}  from 'firebase/storage'
 import { storage} from '../../firebase-config';
+import serverURL from '../../server-config'
 import './style.css'
 function MediaDetails() {
   const [data,setData] = useState({});
     const [loading,setLoading] = useState(true);
+    const hospitalId = localStorage.getItem('hospitalId');
     useEffect(()=>{
-        const hospitalId = localStorage.getItem('hospitalId');
         setLoading(true);   
         let fetchDetails = async()=>{
-            const response = await axios.get(`http://localhost:3002/getMediaDeatils/${hospitalId}`);
+            let hospitalId = localStorage.getItem('hospitalId');
+            const response = await axios.get(`${serverURL}/getMediaDeatils/${hospitalId}`);
             setData(response.data);
             setLoading(false);
         }
@@ -24,7 +26,7 @@ function MediaDetails() {
             // Delete the file
             await deleteObject(fileRef);
             console.log("Successfully deleted");
-            await axios.put(`http://localhost:3002/deleteMediaDetails/${localStorage.getItem('hospitalId')}`, {...data,[index]:""}).then((result) => {
+            await axios.put(`${serverURL}/deleteMediaDetails/${hospitalId}`, {...data,[index]:""}).then((result) => {
             setData(prevData => {
               const updatedData = { ...prevData };
               updatedData[index] = "";
@@ -61,10 +63,7 @@ function MediaDetails() {
                     <div onClick={()=>deleteFile(data.doctorImageURL,'doctorImageURL')} className=' text-white red p-2 rounded-md font-bold hover:cursor-pointer'>Delete</div>
                   </div>
                 </div>}
-                {data.videoURL && <div className=''>
-                  <video className='w-full' src={data.videoURL} controls/>
-                </div>}
-                <div className=''></div>
+                
             </div>
         </div>
         )
