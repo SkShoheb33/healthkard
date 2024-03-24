@@ -111,6 +111,7 @@ function Login() {
                         aria-label="Loading Spinner"
                         data-testid="loader"/>
                 Login</div>}
+            <div className='text-sm'>New User? <Link to='../signup' className='text-blue'>Sign Up</Link></div>
             {/*<div className='flex w-full items-center justify-center gap-2'>
                 <div className='bg-black w-1/3 border'></div>
                     or

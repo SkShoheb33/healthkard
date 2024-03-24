@@ -239,3 +239,24 @@ app.put('/updateIsVerified/:hospitalId', async (req, res) => {
         res.status(500).json({ message: "Error updating hospital isverified", error: error.message });
     }
 });
+
+
+app.delete('/deleteProfile/:hospitalId', async (req, res) => {
+    const hospitalId = req.params.hospitalId;
+    try {
+        // Find the hospital profile by hospitalId and delete it
+        const result = await HospitalModel.findOneAndDelete({ hospitalId: hospitalId });
+        
+        // Check if the hospital profile was found and deleted
+        if (!result) {
+            return res.status(404).json({ message: "Hospital profile not found" });
+        }
+        
+        // Respond with success message
+        res.status(200).json({ message: "Hospital profile deleted successfully" });
+    } catch (error) {
+        // Handle errors
+        console.error("Error deleting hospital profile:", error);
+        res.status(500).json({ message: "Error deleting hospital profile", error: error.message });
+    }
+});

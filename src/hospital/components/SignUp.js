@@ -113,7 +113,7 @@ function SignUp() {
       }
 
     return (
-        <div className='bg-[rgba(0,0,0,0.5)] relative h-[100vh] w-full flex justify-center items-center'>
+        <div className='bg-[rgba(0,0,0,0.5)] z-10 relative h-[100vh] w-full flex justify-center items-center'>
             <div className='bg-white shadow-md flex flex-col gap-6 w-2/3 lg:w-1/3 p-6 border rounded-md'>
                 <div className='text-xl font-bold flex justify-between'>
                     <div>Sign Up</div>
@@ -167,6 +167,8 @@ function SignUp() {
                         data-testid="loader"/>
                     Verify & Sign Up
                 </div>}
+                <div className='text-sm'>Already have an account ?  <Link to='../login' className='text-blue'>Login</Link></div>
+
                 {/*<div className='flex w-full items-center justify-center gap-2'>
                     <div className='bg-black w-1/3 border'></div>
                     or

@@ -53,8 +53,8 @@ function Pending() {
             <Outlet/>
         </div>}
         {!hospitalId && <div className='flex flex-col w-2/3 gap-10 justify-center items-center h-[80vh]'>
-            <img src={logo} alt='logo' width='500px'/>
-            <div className='font-bold text-3xl'>HealthKard</div>
+            <img src={logo} alt='logo' width='300px'/>
+            <div className='font-bold text-3xl text-green'>HealthKard</div>
         </div>}
     </div>
   )
