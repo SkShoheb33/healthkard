@@ -47,7 +47,7 @@ function SignUp() {
         try {
             const response = await axios.get(`${serverURL}/checkMail/${email}`);
             console.log(response.data.isverified === "1");
-            return response.data.isverified === "1";
+            return response.data.isverified === "2";
         } catch (error) {
             console.error("Error checking email in database:", error);
             return false; // Return false in case of error

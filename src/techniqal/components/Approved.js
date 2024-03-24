@@ -3,6 +3,7 @@ import ApproivedNavbar from './ApprovedNavbar'
 import {Outlet, useParams} from 'react-router-dom'
 import Table from './Table'
 import serverURL from '../../server-config'
+import logo from '../../assets/logo.svg'
 import axios from 'axios';
 function Approved() {
     let [data,setData] = useState([]);
@@ -31,7 +32,7 @@ function Approved() {
     }
   return (
     <div className='flex p-4 gap-12 justify-center relative'>
-        <div className={`flex flex-col gap-5 ${hospitalId?'w-1/4':'w-full'}`}>
+        <div className='flex flex-col gap-5 w-1/4'>
             <div className='flex lg:text-xl gap-10'>
                 <div className='flex flex-col w-1/2 p-4 border-gray-100 rounded-xl border shadow-xl'>
                     <div className='font-semibold'>Total Users</div>
@@ -50,6 +51,10 @@ function Approved() {
         {hospitalId && <div className='flex flex-col w-2/3 gap-10 '>
             <ApproivedNavbar/>
             <Outlet/>
+        </div>}
+        {!hospitalId && <div className='flex flex-col w-2/3 gap-10 justify-center items-center h-[80vh]'>
+            <img src={logo} alt='logo' width='500px'/>
+            <div className='font-bold text-3xl'>HealthKard</div>
         </div>}
     </div>
   )

@@ -35,7 +35,7 @@ function HospitalDetails() {
         </div>
         <div className='w-full flex  p-3 rounded-md hover:font-bold hover:cursor-pointer'>
             <div className='w-1/2 font-semibold'>GST File</div>
-            <div className=' blue text-white w-fit px-2 rounded'> View </div>
+            <a rel="noopener noreferrer" href={data?.hospitalGSTFile} target='_blank'  className=' blue text-white w-fit px-2 rounded'> View </a>
         </div>
         <div className='w-full flex light-green p-3 rounded-md hover:font-bold hover:cursor-pointer'>
             <div className='w-1/2 font-semibold'>License Number</div>
@@ -43,7 +43,7 @@ function HospitalDetails() {
         </div>
         <div className='w-full flex  p-3 rounded-md hover:font-bold hover:cursor-pointer'>
             <div className='w-1/2 font-semibold'>License File</div>
-            <div className=' blue text-white w-fit px-2 rounded'> View </div>
+            <a rel="noopener noreferrer" href={data?.hospitalLicense} target='_blank' className=' blue text-white w-fit px-2 rounded'> View </a>
         </div>
         <div className='w-full flex light-green p-3 rounded-md hover:font-bold hover:cursor-pointer'>
             <div className='w-1/2 font-semibold'>Street Address</div>

@@ -74,6 +74,7 @@ app.post('/sendOTP', async (req, res) => {
 // checking for present or not
 app.get('/checkMail/:email', async (req, res) => {
     const email = req.params.email;
+    console.log(email)
     try {
         const result = await HospitalModel.findOne({ email });
         if (result) {

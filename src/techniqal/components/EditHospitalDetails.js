@@ -65,7 +65,7 @@ function EditHospitalDetails() {
                 <div className='w-full lg:w-2/3 mx-auto flex flex-col gap-6 bg-white p-4'>
                     <div className='flex justify-between items-center'>
                         <div className=' text-2xl lg:text-4xl font-semibold'>Edit</div>
-                        <Link to='../doctorDetails' className='hover:text-red-800 hover:bg-gray-200 p-2 rounded-full hover:cursor-pointer'><RxCross1/></Link>
+                        <Link to={`../hospitalDetails/${hospitalId}`} className='hover:text-red-800 hover:bg-gray-200 p-2 rounded-full hover:cursor-pointer'><RxCross1/></Link>
                     </div>
                     <div className=' text-xl lg:text-3xl font-semibold text-blue'>Hospital Details</div>
                     <div className='flex flex-col gap-5 p-2'>

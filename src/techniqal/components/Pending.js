@@ -3,6 +3,7 @@ import PendingNavbar from './PendingNavbar'
 import {Outlet, useParams} from 'react-router-dom'
 import Table from './Table'
 import serverURL from '../../server-config'
+import logo from '../../assets/logo.svg'
 import axios from 'axios';
 function Pending() {
     const {hospitalId}  = useParams();
@@ -31,7 +32,7 @@ function Pending() {
     }
   return (
     <div className='flex p-4 gap-12 justify-center'>
-        <div className={`flex flex-col gap-5 ${hospitalId?'w-1/4':'w-full'}`}>
+        <div className='flex flex-col gap-5 w-1/4'>
             <div className='flex lg:text-xl gap-10'>
                 <div className='flex flex-col w-1/2 p-4 border-gray-100 rounded-xl border shadow-xl'>
                     <div className='font-semibold'>Total Users</div>
@@ -44,12 +45,16 @@ function Pending() {
             </div>
             <div className='gap-5 flex flex-col'>
                 <input type='search' onChange={(e)=>filter(e.target.value)}  placeholder='Search with HealthKard ID or Hospital Name' className='border border-gray-100 shadow-lg w-full p-2 rounded-md'/>
-                {data.length !== 0 && <Table data={filteredData} dataOf={'Hospital'}/>}
+                <Table data={filteredData} dataOf={'Hospital'}/>
             </div>
         </div>
         {hospitalId && <div className='flex flex-col w-2/3 gap-10 '>
             <PendingNavbar/>
             <Outlet/>
+        </div>}
+        {!hospitalId && <div className='flex flex-col w-2/3 gap-10 justify-center items-center h-[80vh]'>
+            <img src={logo} alt='logo' width='500px'/>
+            <div className='font-bold text-3xl'>HealthKard</div>
         </div>}
     </div>
   )

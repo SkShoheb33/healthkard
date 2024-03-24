@@ -3,7 +3,7 @@ import gif from '../../assets/datanotfound.gif'
 import { NavLink } from 'react-router-dom'
 function Table({data,dataOf}) {
   return (
-    <div id='table' className='relative flex flex-col h-[65vh] overflow-scroll'>
+    <div id='table' className='relative flex flex-col h-[55vh] overflow-scroll'>
       <div className= 'sticky top-0 blue flex p-2 text-white rounded my-2'>
           <div className='w-1/2'>Health id</div>
           <div className='w-1/2'>{dataOf} name</div>
