@@ -25,14 +25,15 @@ function Form3() {
         localStorage.setItem('images',JSON.stringify(images));
     }, [mediaDetails,images]);
     // upload delete functions
-    const uploadImage = (selectedImage, field, index) => {
+    const uploadImage = async (e, field, index) => {
+        let selectedImage = e.target.files[0];
         if (selectedImage) {
             let temp = [...images];
             temp[index] = selectedImage.name;
             setImages(temp);
             const imageRef = ref(storage, 'Hospital/'+localStorage.getItem('hospital_id')+'/' + field + '/' + selectedImage.name);
             const uploadTask = uploadBytesResumable(imageRef, selectedImage);
-            uploadTask.on('state_changed',(snapshot) => {
+            await uploadTask.on('state_changed',(snapshot) => {
                     setProgress((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
                 },
                 (error) => {
@@ -57,7 +58,7 @@ function Form3() {
             alert('Please select an image to upload.');
         }
     };
-    const deleteFile = (filePath,key,index) => {
+    const deleteFile = async(filePath,key,index) => {
         const fileRef = ref(storage, filePath);
         if(index>=4){
             deleteObject(fileRef).then((result) => {
@@ -74,7 +75,7 @@ function Form3() {
         temp[index] = null;
         setImages(temp);
         // Delete the file
-        deleteObject(fileRef)
+        await deleteObject(fileRef)
             .then(() => {
                 setMediaDetails({...mediaDetails,[key]:""});
                 console.log('File deleted successfully');
@@ -90,35 +91,31 @@ function Form3() {
             <div className='text-2xl lg:text-4xl mt-7 font-medium w-full '>Media Details</div>
             <div className='flex flex-col gap-4 mt-7 w-full shadow-md p-8'>
                 <div className='text-gray-400 text-center text-xl'>Hospital Logo will be displayed during searching and locating</div>
-                <label id='logoBtn' htmlFor="logo" className="relative hover:cursor-pointer blue text-white h-10 flex justify-center items-center rounded-md">
+                {!images[0] && <label id='logoBtn' htmlFor="logo" className="relative hover:cursor-pointer blue text-white h-10 flex justify-center items-center rounded-md">
                     <span>Upload Logo</span>
-                    <input type="file" id="logo" className="hidden" onChange={(e) => uploadImage(e.target.files[0], 'logo',0)} accept="image/*"/>
-                </label>
+                    <input type="file" id="logo" className="hidden" onChange={(e) => uploadImage(e, 'logo',0)} accept="image/*"/>
+                </label>}
                 {images[0] && <div className='flex gap-2 items-center bg-gray-200 w-fit p-1 rounded-md '>
                     <div>{images[0]}</div>
                     <RxCross2 onClick={()=>deleteFile(mediaDetails.logoURL,"logoURL",0)} className='hover:text-red-500 hover:cursor-pointer'/>
                 </div>}
                 <div className='text-gray-400 text-center mt-4 text-xl'>Hospital image will be used as a thumbnail in the banner</div>
-                <label id="hospitalImageBtn" htmlFor="hospitalImage" className="hover:cursor-pointer blue text-white h-10 flex justify-center items-center rounded-md">
+                {!images[1] && <label id="hospitalImageBtn" htmlFor="hospitalImage" className="hover:cursor-pointer blue text-white h-10 flex justify-center items-center rounded-md">
                     <span>Upload Hospital Image</span>
-                    <input type="file" id="hospitalImage" className="hidden" onChange={(e) => uploadImage(e.target.files[0], 'hospitalImage',1)} accept="image/*"/>
-                </label>
+                    <input type="file" id="hospitalImage" className="hidden" onChange={(e) => uploadImage(e, 'hospitalImage',1)} accept="image/*"/>
+                </label>}
                 {images[1] && <div className='flex gap-2 items-center bg-gray-200 w-fit p-1 rounded-md '>
                     <div>{images[1]}</div>
                     <RxCross2 onClick={()=>deleteFile(mediaDetails.hospitalImageURL,"hospitalImageURL",1)} className='hover:text-red-500 hover:cursor-pointer'/>
                 </div>}
+                <div className='text-gray-400 text-center mt-4 text-xl'>Doctor photo will be displayed in the description (Optional)</div>
+                {!images[2] && <label id="doctorImageBtn" htmlFor="doctorImage" className="hover:cursor-pointer blue text-white h-10 flex justify-center items-center rounded-md">
+                    <span>Upload Doctor Image</span>
+                    <input type="file" id="doctorImage" className="hidden" onChange={(e) => uploadImage(e, 'doctorImage',2)}  accept="image/*"/>
+                </label>}
                 {images[2] && <div className='flex gap-2 items-center bg-gray-200 w-fit p-1 rounded-md '>
                     <div>{images[2]}</div>
-                    <RxCross2 onClick={()=>deleteFile(mediaDetails.videoURL,"videoURL",2)} className='hover:text-red-500 hover:cursor-pointer'/>
-                </div>}
-                <div className='text-gray-400 text-center mt-4 text-xl'>Doctor photo will be displayed in the description (Optional)</div>
-                <label id="doctorImageBtn" htmlFor="doctorImage" className="hover:cursor-pointer blue text-white h-10 flex justify-center items-center rounded-md">
-                    <span>Upload Doctor Image</span>
-                    <input type="file" id="doctorImage" className="hidden" onChange={(e) => uploadImage(e.target.files[0], 'doctorImage',3)}  accept="image/*"/>
-                </label>
-                {images[3] && <div className='flex gap-2 items-center bg-gray-200 w-fit p-1 rounded-md '>
-                    <div>{images[3]}</div>
-                    <RxCross2 onClick={()=>deleteFile(mediaDetails.doctorImageURL,"doctorImageURL",3)} className='hover:text-red-500 hover:cursor-pointer'/>
+                    <RxCross2 onClick={()=>deleteFile(mediaDetails.doctorImageURL,"doctorImageURL",2)} className='hover:text-red-500 hover:cursor-pointer'/>
                 </div>}
                 <div className='text-gray-400 text-center mt-4 text-xl'>Add more photos to show public (Optional)</div>
                 <div className='flex flex-wrap'>
@@ -133,7 +130,7 @@ function Form3() {
                     <label className='w-1/5 hover:cursor-pointer border border-black shadow-md flex flex-col gap-2 items-center justify-center p-2 rounded-md'>
                         <RiImageAddLine className='text-4xl'/>
                         <div className=''>Add Image</div>
-                        <input className='hidden' type='file' accept='image/*'  onChange={(e) => uploadImage(e.target.files[0], 'achivements',4)}/>
+                        <input className='hidden' type='file' accept='image/*'  onChange={(e) => uploadImage(e, 'achivements',4)}/>
                     </label>
                 </div>
                 <textarea value={mediaDetails.desc} className='border mt-4 p-4' placeholder='Give a brief description about your hospital in 4 lines '  rows={5} onChange={(e)=>setMediaDetails({...mediaDetails,desc:e.target.value})}></textarea> 

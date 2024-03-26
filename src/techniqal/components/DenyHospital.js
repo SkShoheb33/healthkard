@@ -12,7 +12,7 @@ function DenyHospital() {
         <div className='bg-white p-4 w-1/3 flex flex-col gap-4'>
             <div className='flex justify-between items-center'>
                 <div className='text-2xl font-semibold'>Deny</div>
-                <Link to='../doctorDetails' className='hover:text-red-800 hover:bg-gray-200 p-2 rounded-full hover:cursor-pointer'><RxCross1/></Link>
+                <Link to='../' className='hover:text-red-800 hover:bg-gray-200 p-2 rounded-full hover:cursor-pointer'><RxCross1/></Link>
             </div>
             <div className='text-sm'>Please give reason for the deny.</div>
             <div className="relative w-full min-w-[200px] h-10 ">

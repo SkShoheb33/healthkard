@@ -61,20 +61,26 @@ function SignUp() {
         setSending(true);
         const isPresent = await isAlreadyPresentInDatabase(email);
         if(isPresent){
-            toast.error("Email already exist.")
+            toast.error("Email already exist.");
+            setSending(false);
             return;
         }
         if (hospitalName === '') {
+            toast.error("Please enter hospital name.");
             setHospitalError(true);
+            setSending(false);
             return;
         }
         
-        if (email === '') {
+        if (!email.includes('@gmail.com')) {
+            toast.error("Please enter proper email.");
+            setSending(false);
             setEmailError(true);
             return;
         }
         if(!isCheckBoxChecked){
             document.getElementById('checkbox-text').style.color = "red";
+            setSending(false);
             return;
         }
         let emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;

@@ -136,10 +136,11 @@ function HospitalRegister() {
               }).then((result) => {
                 console.log(result);
                 navigate('success');
+                localStorage.clear();
+                setSaved(true);
               }).catch((err) => {
                 notify();
               });
-              setSaved(true);
               return;
           }
       }

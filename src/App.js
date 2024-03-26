@@ -59,7 +59,7 @@ function App() {
             <Route path='doctorDetails/:hospitalId' element={<DoctorDetails/>}></Route>
             <Route path='mediaDetails/:hospitalId' element={<MediaDetails/>}></Route>
             <Route path='edit/:hospitalId' element={<EditHospitalDetails/>}></Route>
-            <Route path='deny' element={<DenyHospital/>}></Route>
+            <Route path='deny/:hospitalId' element={<DenyHospital/>}></Route>
           </Route>
           <Route path='approved' element={<Approved/>}>
             <Route path='hospitalDetails/:hospitalId'  element={<HospitalDetails/>}></Route>

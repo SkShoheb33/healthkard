@@ -22,7 +22,7 @@ function PendingNavbar() {
             <NavLink to={`mediaDetails/${hospitalId}`} className=' w-1/4 text-center p-1'>Media</NavLink>
         </div>
         <div className='flex items-center gap-2 w-1/3'>
-            <Link to='deny' className='w-1/4 text-center red text-white px-3 py-1 hover:cursor-pointer rounded'>Deny</Link>
+            <Link to={`deny/${hospitalId}`} className='w-1/4 text-center red text-white px-3 py-1 hover:cursor-pointer rounded'>Deny</Link>
             <div onClick={approve} className='w-1/4 text-center green text-white  py-1 hover:cursor-pointer rounded '>Approve</div>
             <Link to={`edit/${hospitalId}`} className='w-1/4 text-center blue text-white px-3 py-1 hover:cursor-pointer rounded'>Edit</Link>
         </div>

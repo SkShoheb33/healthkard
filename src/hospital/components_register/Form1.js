@@ -325,7 +325,7 @@ function Form1() {
         <div className='w-full flex flex-col gap-4 p-2 lg:p-4 rounded shadow-md'>
           <div className='text-xl lg:text-2xl font-semibold'>Contact Number at Hospital</div>
           <div className='text-sm'>Your customer contact to this number</div>
-          <div className='w-full flex items-center gap-1 lg:gap-6 flex-col justify-start '>
+          <div className='w-full flex items-center gap-1 lg:gap-6 md:flex-row flex-col justify-start '>
             <PhoneInput
                 country={'in'}
                 name="contactNumber"
@@ -399,7 +399,7 @@ function Form1() {
         <div className='w-full flex flex-col gap-4  p-2 lg:p-4 rounded shadow-md'>
           <div className='text-xl lg:text-2xl font-semibold'>Hospital Owner Details</div>
           <div className='text-sm'>These will be used to share revenue related communications</div>
-          <div className='w-full flex items-center gap-1 lg:gap-6 flex-col justify-start '>
+          <div className='w-full flex items-center gap-1 lg:gap-6 flex-col md:flex-row justify-start '>
             <PhoneInput
                 country={'in'}
                 name="hospitalOwnerContactNumber"
