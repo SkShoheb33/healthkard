@@ -9,7 +9,9 @@ import 'react-phone-input-2/lib/style.css'
 import { RecaptchaVerifier, signInWithPhoneNumber } from 'firebase/auth';
 import { ToastContainer, toast,Bounce } from 'react-toastify';
 import UploadSplashScreen from '../components/UploadSplashScreen';
-import { json } from 'react-router-dom';
+// import { json } from 'react-router-dom';
+import { CiEdit } from "react-icons/ci";
+
 function Form1() {
   const [hospitalDetails, setHospitalDetails] = useState(() => {
     const storedHospitalDetails = localStorage.getItem('hospitalDetails');
@@ -84,8 +86,6 @@ function Form1() {
     localStorage.setItem('hospitalDetails', JSON.stringify(hospitalDetails));
   }, [hospitalDetails]);
   useEffect(()=>{
-    document.getElementById('recaptcha1').style.display='none';
-    document.getElementById('recaptcha2').style.display='none';
     const storedHospitalDetails = JSON.parse(localStorage.getItem('hospitalDetails'));
     
     if(storedHospitalDetails.hospitalNumber){
@@ -94,17 +94,17 @@ function Form1() {
     if(storedHospitalDetails.hospitalOwnerContactNumber){
       setOtp2({otp:'',flag:false,verified:true})
     }
-    if ("geolocation" in navigator) {
-      navigator.geolocation.getCurrentPosition(function (position) {
-        setHospitalDetails({...hospitalDetails,address:{...hospitalDetails.address,
-          lat: position.coords.latitude,
-          lng: position.coords.longitude,
-        }});
-      });
-    } else {
-      console.log("Geolocation is not available in your browser.");
-    }
   },[]);
+  if ("geolocation" in navigator) {
+    navigator.geolocation.getCurrentPosition(function (position) {
+      setHospitalDetails({...hospitalDetails,address:{...hospitalDetails.address,
+        lat: position.coords.latitude,
+        lng: position.coords.longitude,
+      }});
+    });
+  } else {
+    console.log("Geolocation is not available in your browser.");
+  }
   const [progress,setProgress] = useState(0);
   // upload and delete
   const uploadPdf = (selectedPdf,field,index) => {
@@ -178,25 +178,31 @@ function Form1() {
   const handleSendOTP = async (u)=>{
     try{
       if(u===1){
+        if(hospitalPhone.length<12){
+          toast.error("Please enter valid phone number");
+          return;
+        }
         setLoading1(true);
-        document.getElementById("recaptcha1").style.display = "block";
         const recaptcha1 = new RecaptchaVerifier(auth,"recaptcha1",{});
         const confirmation1 = await signInWithPhoneNumber(auth,'+'+hospitalPhone,recaptcha1);  
         console.log(confirmation1)
         if(confirmation1){
-          document.getElementById('recaptcha1').style.display = "none";
+          document.getElementById('recaptcha1').style.display = 'none';
           setOtp1({...otp1,flag:true});
           setuser1(confirmation1);
           setLoading1(false);
           return;
         }      
       }else{
+        if(ownerPhone.length<12){
+          toast.error("Please enter valid phone number");
+          return;
+        }
         setLoading2(true)
-        document.getElementById("recaptcha2").style.display = "block";
         const recaptcha2 = new RecaptchaVerifier(auth,"recaptcha2",{});
         const confirmation2 = await signInWithPhoneNumber(auth,'+'+ownerPhone,recaptcha2);
         if(confirmation2){
-              document.getElementById('recaptcha2').style.display = "none";
+          document.getElementById('recaptcha2').style.display = 'none';
               setOtp2({...otp2,flag:true});
               setuser2(confirmation2);
               setLoading2(false);
@@ -204,7 +210,12 @@ function Form1() {
           }
       }
     }catch (error){
+      document.getElementById('recaptcha1').style.display = 'none';
+      document.getElementById('recaptcha2').style.display = 'none';
+      toast.error('Error while sending otp');
       console.log("Error while sending otp",error);
+      setLoading1(false);
+      setLoading2(false);
     }
   }
  const handleVerifyOTP = async(u)=>{
@@ -240,6 +251,7 @@ function Form1() {
 
   return (
     <div className='relative  lg:w-4/5 mx-auto'>
+      <ToastContainer/>
       {progress!==0 && <UploadSplashScreen progress={progress}/>}
       <div className='text-2xl lg:text-4xl mt-7 font-medium'>Hospital Details</div>
       <div className='w-full p-2 flex flex-col mt-10 gap-8'>
@@ -325,32 +337,34 @@ function Form1() {
         <div className='w-full flex flex-col gap-4 p-2 lg:p-4 rounded shadow-md'>
           <div className='text-xl lg:text-2xl font-semibold'>Contact Number at Hospital</div>
           <div className='text-sm'>Your customer contact to this number</div>
-          <div className='w-full flex items-center gap-1 lg:gap-6 md:flex-row flex-col justify-start '>
+          <div className='w-full flex items-center gap-4 lg:gap-6 md:flex-row flex-col  flex-wrap '>
             <PhoneInput
                 country={'in'}
                 name="contactNumber"
                 value={hospitalDetails.hospitalNumber}
                 onChange={phone=>setHospitalPhone(phone)}
                 disabled={otp1.verified}
+                className=''
               />
               {otp1.flag&&<OTPInput value={otp1.otp}  onChange={(e)=>setOtp1({otp:e,flag:true})} autoFocus OTPLength={6} inputClassName='border b-blue' otpType="number" disabled={false} secure />}
               
-            {!otp1.flag && !otp1.verified && <div onClick={()=>handleSendOTP(1)} className='p-2 w-fit gap-3 flex justify-center items-center blue text-white rounded-md hover:cursor-pointer'>
-            {<ClipLoader
-                color={"#fff"}
-                loading={loading1}
-                size={20}
-                aria-label="Loading Spinner"
-                data-testid="loader"
-              />}SEND OTP</div>}
-            {otp1.flag && !otp1.verified && <div onClick={()=>handleVerifyOTP(1)} className='p-2 w-fit gap-3 flex justify-center items-center blue text-white rounded-md hover:cursor-pointer'>
-            {<ClipLoader
-                color={"#fff"}
-                loading={loading1}
-                size={20}
-                aria-label="Loading Spinner"
-                data-testid="loader"
-              />}VERIFY</div>}
+            {
+              !otp1.flag && !otp1.verified && <div onClick={()=>handleSendOTP(1)} className='p-2 w-fit gap-3 flex justify-center items-center blue text-white rounded-md hover:cursor-pointer'>
+              <ClipLoader
+                  color={"#fff"}
+                  loading={loading1}
+                  size={20}
+                  aria-label="Loading Spinner"
+                  data-testid="loader"
+                />{loading1?'Sending OTP':'Send OTP'}</div>
+            }
+            {
+              otp1.flag && !otp1.verified && <div className='flex items-center gap-4 flex-wrap'>
+                  <div onClick={()=>handleVerifyOTP(1)} className='p-2 w-fit gap-3 flex justify-center items-center blue text-white rounded-md hover:cursor-pointer'>
+                  <ClipLoader color={"#fff"} loading={loading1} size={20} aria-label="Loading Spinner" data-testid="loader"/>VERIFY</div>
+                  <div className='flex items-center gap-2 '>Edit your phone number? <div className='p-2 hover:bg-gray-200 hover:cursor-pointer rounded-full' onClick={()=>{setOtp1({...otp1,flag:false,verified:false});window.location.reload();}}><CiEdit/></div> </div>
+                </div>
+              }
             {otp1.verified && <div className='p-2 w-fit gap-3 flex justify-center items-center text-green rounded-md hover:cursor-pointer text-xl font-bold'>Verified</div>}
             <div id="recaptcha1" className=''></div>
           </div>
@@ -399,7 +413,7 @@ function Form1() {
         <div className='w-full flex flex-col gap-4  p-2 lg:p-4 rounded shadow-md'>
           <div className='text-xl lg:text-2xl font-semibold'>Hospital Owner Details</div>
           <div className='text-sm'>These will be used to share revenue related communications</div>
-          <div className='w-full flex items-center gap-1 lg:gap-6 flex-col md:flex-row justify-start '>
+          <div className='w-full flex items-center gap-4 lg:gap-6 md:flex-row flex-col  flex-wrap '>
             <PhoneInput
                 country={'in'}
                 name="hospitalOwnerContactNumber"
@@ -416,16 +430,15 @@ function Form1() {
                 size={20}
                 aria-label="Loading Spinner"
                 data-testid="loader"
-              />}SEND OTP</div>}
+              />}{loading2?'Sending OTP':'Send OTP'}</div>}
               
-            {otp2.flag && !otp2.verified && <div onClick={()=>handleVerifyOTP(2)} className='p-2 w-fit gap-3 flex justify-center items-center blue text-white rounded-md hover:cursor-pointer'>
-            {<ClipLoader
-                color={"#fff"}
-                loading={loading2}
-                size={20}
-                aria-label="Loading Spinner"
-                data-testid="loader"
-              />}VERIFY</div>}
+              {
+                otp2.flag && !otp2.verified && <div className='flex items-center gap-4 flex-wrap'>
+                    <div onClick={()=>handleVerifyOTP(2)} className='p-2 w-fit gap-3 flex justify-center items-center blue text-white rounded-md hover:cursor-pointer'>
+                    <ClipLoader color={"#fff"} loading={loading2} size={20} aria-label="Loading Spinner" data-testid="loader"/>VERIFY</div>
+                    <div className='flex items-center gap-2 '>Edit your phone number? <div className='p-2 hover:bg-gray-200 hover:cursor-pointer rounded-full' onClick={()=>{setOtp2({...otp2,flag:false,verified:false});window.location.reload();}}><CiEdit/></div> </div>
+                  </div>
+                }
             {otp2.verified && <div className='p-2 w-fit gap-3 flex justify-center items-center text-green rounded-md hover:cursor-pointer text-xl font-bold'>Verified</div>}
             <div id="recaptcha2" className=''></div>
           </div>

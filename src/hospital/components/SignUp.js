@@ -32,8 +32,8 @@ function SignUp() {
         return OTP;
     }
     let generateUniqueId= () => {
-        const prefix = "HH24"
         const date = new Date();
+        const prefix = "HH"+date.getFullYear().toString().slice(-2);
         const seconds = date.getSeconds();
         const minutes = date.getMinutes();
         const milliseconds = date.getMilliseconds();

@@ -19,7 +19,7 @@ function EditHospitalDetails() {
             setLoading(false);
         }
         fetchData();
-    },[]);
+    },[hospitalId]);
 
     const save = async () => {
         try {

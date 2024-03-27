@@ -27,11 +27,15 @@ import HospitailDoctorDetails from './hospital/components_dashboard/HospitailDoc
 import HospitalMediaDetails from './hospital/components_dashboard/HospitalMediaDetails'
 import TechnicalLogin from './techniqal/credentails.js/TechnicalLogin';
 import DeleteHospital from './techniqal/components/DeleteHospital';
+// client
+import UserSignUp from './client/credentials/UserSignUp'
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Home />}></Route>
+        <Route path="/" element={<Home/>}>
+          <Route path='login' element={<UserSignUp/>}></Route>
+        </Route>
         <Route path='/hospital' element={<HospitalDashboard/>}>
           <Route index path='dashboard' element={<Dashboard/>}></Route>
           <Route index path='' element={<Dashboard/>}></Route>
